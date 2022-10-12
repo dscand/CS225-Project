@@ -86,7 +86,7 @@ RTexture::RTexture(Renderer* renderer) {
 bool RTexture::loadTexture(std::string path) {
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
 
-	SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0xFF, 0xFF, 0xFF));
+	//SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0, 0));
 
 	this->texture = renderer->loadTexture(loadedSurface);
 	

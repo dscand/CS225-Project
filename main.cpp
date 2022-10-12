@@ -1,4 +1,4 @@
-// g++ -std=c++17 main.cpp -I"include" -L"lib" -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -o WinMain2
+// g++ -std=c++17 main.cpp -I"include" -L"lib" -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -o Game
 
 #include <iostream>
 #include <math.h>
@@ -16,18 +16,25 @@ int WinMain(int argc, char* argv[]) {
 	Renderer renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 	renderer.init();
 
+
+	RTexture background(&renderer);
+	std::string backgroundTexturePath = "Textures/test2.jpg";
+	//background.loadTexture(backgroundTexturePath);
+	background.scaleImage(1.0);
+
+
 	double speed = 0.1;
 	double rotationSpeed = 10;
 	double velocityCap = 4;
 
 	Character player(&renderer, velocityCap);
-	std::string texturePath = "test.bmp";
-	player.loadTexture(texturePath);
-	
+	std::string playerTexturePath = "Textures/test.bmp";
+	player.loadTexture(playerTexturePath);
 	player.scaleImage(1.0/10.0);
 
 	player.moveX((WINDOW_WIDTH - player.getWidth()) / 2);
 	player.moveY((WINDOW_HEIGHT - player.getHeight()) / 2);
+
 
 	bool stop = false;
 	bool pause = false;
@@ -101,6 +108,7 @@ int WinMain(int argc, char* argv[]) {
 			renderer.clear();
 
 			// Texture Update
+			background.render((WINDOW_WIDTH - background.getWidth()) / 2, (WINDOW_HEIGHT - background.getHeight()) / 2);
 			player.render();
 
 			renderer.update();
