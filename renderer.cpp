@@ -11,6 +11,7 @@ class Renderer {
 		int windowHeight;
 	public:
 		Renderer(int windowWidth, int windowHeight) { this->windowWidth = windowWidth; this->windowHeight = windowHeight; }
+		~Renderer() { close(); }
 		bool init();
 		void close();
 		SDL_Texture* loadTexture(SDL_Surface*& textureSurf) { return SDL_CreateTextureFromSurface(rend, textureSurf); }
@@ -50,7 +51,7 @@ void Renderer::update() {
 class RTexture {
 	public:
 		RTexture(Renderer*);
-		~RTexture() { free(); };
+		virtual ~RTexture() { free(); };
 
 		bool loadTexture(std::string);
 		void free();
