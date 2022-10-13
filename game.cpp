@@ -25,8 +25,12 @@ class Player {
 		~Player() { delete character; delete sprite; }
 		void playerStep(int, int, double);
 		void render() { character->render(); }
-		void boost(int multiplier = 1) { character->addVel(speed * multiplier); }
-		void rotate(int multiplier = 1) { character->rotate(rotationSpeed * multiplier); }
+		void boost(double multiplier = 1) { character->addVel(speed * multiplier); }
+		void rotate(double multiplier = 1) { character->rotate(rotationSpeed * multiplier); }
+		void setPosX(double posX) { character->setPosX(posX); }
+		void setPosY(double posY) { character->setPosY(posY); }
+		double getOffsetX() { return character->getWidth() / 2; }
+		double getOffsetY() { return character->getHeight() / 2; }
 
 	private:
 		Character* character;
@@ -36,7 +40,7 @@ class Player {
 		double rotationSpeed;
 		double velocityCap;
 };
-Player::Player(Renderer& renderer, std::string shipTexturePath, double shipScale, std::string flameTexturePath, double flameScale, double speed = 0.1, double rotationSpeed = 10, double velocityCap = 4) {
+Player::Player(Renderer& renderer, std::string shipTexturePath, double shipScale, std::string flameTexturePath, double flameScale, double speed = 10, double rotationSpeed = 180, double velocityCap = 4) {
 	character = new Character(&renderer, velocityCap);
 	character->loadTexture(shipTexturePath);
 	character->scaleImage(shipScale);

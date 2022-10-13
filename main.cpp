@@ -23,17 +23,19 @@ int WinMain(int argc, char* argv[]) {
 
 
 	std::string playerTexturePath = "Textures/test.bmp";
-	Player player(renderer, playerTexturePath, 1.0/10.0, playerTexturePath, 1.0/10.0);
+	Player player(renderer, playerTexturePath, 1.0/10.0, playerTexturePath, 1.0/10.0, 100, 540, 4);
 
-	//player.moveX((WINDOW_WIDTH - player.getWidth()) / 2);
-	//player.moveY((WINDOW_HEIGHT - player.getHeight()) / 2);
+	player.setPosX((WINDOW_WIDTH / 2) - player.getOffsetX());
+	player.setPosY((WINDOW_HEIGHT / 2) - player.getOffsetY());
+	//player.setPosX(WINDOW_WIDTH);
+	//player.setPosY(WINDOW_HEIGHT);
 
 
 	bool stop = false;
 	bool pause = false;
 	LTimer dtTimer;
 	while(!stop) {
-		float deltaT = dtTimer.getTicks();
+		float deltaT = dtTimer.getTicks() / 1000.f;
 		dtTimer.start();
 
 		SDL_Event event;
@@ -64,16 +66,16 @@ int WinMain(int argc, char* argv[]) {
 		else {
 			const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
 			if(currentKeyStates[SDL_SCANCODE_UP]) {
-				player.boost(1);
+				player.boost(1 * deltaT);
 			}
 			/*if(currentKeyStates[SDL_SCANCODE_DOWN]) {
-				player.boost(-1);
+				player.boost(-1 * deltaT);
 			}*/
 			if(currentKeyStates[SDL_SCANCODE_RIGHT]) {
-				player.rotate(1);
+				player.rotate(1 * deltaT);
 			}
 			if(currentKeyStates[SDL_SCANCODE_LEFT]) {
-				player.rotate(-1);
+				player.rotate(-1 * deltaT);
 			}
 
 
