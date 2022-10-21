@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <math.h>
+#include <time.h>
+#include <vector>
 
 #include "include/SDL.h"
 #include "include/SDL_image.h"
@@ -10,32 +12,25 @@
 #include "helpers.cpp"
 //#include "renderer.cpp"
 #include "game.cpp"
+#include "levels.cpp"
 
-const int WINDOW_WIDTH = 640;
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_WIDTH = 840;
+const int WINDOW_HEIGHT = 840;
 
 int WinMain(int argc, char* argv[]) {
-	Renderer renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
-	renderer.init();
+	std::cout << "Starting" << std::endl;
+	srand(time(NULL));
 
-	std::string backgroundTexturePath = "Textures/test2.jpg";
-	Background background(renderer, backgroundTexturePath);
-
-
-	std::string playerTexturePath = "Textures/test.bmp";
-	Player player(renderer, playerTexturePath, 1.0/10.0, playerTexturePath, 1.0/10.0, 100, 540, 4);
-
-	player.setPosX((WINDOW_WIDTH / 2) - player.getOffsetX());
-	player.setPosY((WINDOW_HEIGHT / 2) - player.getOffsetY());
-	//player.setPosX(WINDOW_WIDTH);
-	//player.setPosY(WINDOW_HEIGHT);
+	Level level = level_1;
+	level.init();
 
 
 	bool stop = false;
 	bool pause = false;
+	float timeSpeed = 1;
 	LTimer dtTimer;
 	while(!stop) {
-		float deltaT = dtTimer.getTicks() / 1000.f;
+		float deltaT = dtTimer.getTicks() / 1000.f / timeSpeed;
 		dtTimer.start();
 
 		SDL_Event event;
@@ -50,6 +45,22 @@ int WinMain(int argc, char* argv[]) {
 						case SDL_SCANCODE_ESCAPE:
 							pause = !pause;
 							break;
+						case SDL_SCANCODE_1:
+						case SDL_SCANCODE_KP_1:
+							timeSpeed = 1;
+							break;
+						case SDL_SCANCODE_2:
+						case SDL_SCANCODE_KP_2:
+							timeSpeed = 2;
+							break;
+						case SDL_SCANCODE_3:
+						case SDL_SCANCODE_KP_3:
+							timeSpeed = 4;
+							break;
+						case SDL_SCANCODE_4:
+						case SDL_SCANCODE_KP_4:
+							timeSpeed = 8;
+							break;
 
 						default:
 							break;
@@ -61,40 +72,17 @@ int WinMain(int argc, char* argv[]) {
 		}
 
 		if(pause) {
-
+			// TODO: Pause Menu
 		}
 		else {
-			const Uint8* currentKeyStates = SDL_GetKeyboardState( NULL );
-			if(currentKeyStates[SDL_SCANCODE_UP]) {
-				player.boost(1 * deltaT);
-			}
-			/*if(currentKeyStates[SDL_SCANCODE_DOWN]) {
-				player.boost(-1 * deltaT);
-			}*/
-			if(currentKeyStates[SDL_SCANCODE_RIGHT]) {
-				player.rotate(1 * deltaT);
-			}
-			if(currentKeyStates[SDL_SCANCODE_LEFT]) {
-				player.rotate(-1 * deltaT);
-			}
-
-
-			player.playerStep(WINDOW_WIDTH, WINDOW_HEIGHT, deltaT);
-
-
-			renderer.clear();
-
-			// Texture Update
-			background.render(WINDOW_WIDTH, WINDOW_HEIGHT);
-			player.render();
-
-			renderer.update();
+			level.step(deltaT);
 		}
 
-		std::cout << deltaT << std::endl;
+		//std::cout << deltaT << std::endl;
 		// calculates to 60 fps
-		//SDL_Delay(1000 / 60);
+		SDL_Delay(1000 / 60);
 	}
 
+	std::cout << "Exitting" << std::endl;
 	return 0;
 }

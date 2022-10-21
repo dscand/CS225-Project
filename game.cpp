@@ -1,85 +1,233 @@
+#ifndef game
+#define game
+
 #include <iostream>
 
 #include "renderer.cpp"
 
 class Background {
 	public:
-		Background(Renderer&, std::string);
+		Background(Renderer*, std::string, long double);
 		~Background() { delete texture; }
 		void render(int, int);
 
 	private:
 		RTexture* texture;
 };
-Background::Background(Renderer& renderer, std::string texturePath) {
-	texture = new RTexture(&renderer);
+Background::Background(Renderer* renderer, std::string texturePath, long double imageScale = 1) {
+	texture = new RTexture(renderer);
 	texture->loadTexture(texturePath);
+	texture->scaleImage(imageScale);
 }
-void Background::render(int windowWidth, int windowHeight) {
-	texture->render((windowWidth - texture->getWidth()) / 2, (windowHeight - texture->getHeight()) / 2);
+void Background::render(int windowOffsetX = 0, int windowOffsetY = 0) {
+	texture->render(windowOffsetX, windowOffsetY);
 }
 
 class Player {
 	public:
-		Player(Renderer&, std::string, double, std::string, double, double, double, double);
-		~Player() { delete character; delete sprite; }
-		void playerStep(int, int, double);
-		void render() { character->render(); }
-		void boost(double multiplier = 1) { character->addVel(speed * multiplier); }
-		void rotate(double multiplier = 1) { character->rotate(rotationSpeed * multiplier); }
-		void setPosX(double posX) { character->setPosX(posX); }
-		void setPosY(double posY) { character->setPosY(posY); }
-		double getOffsetX() { return character->getWidth() / 2; }
-		double getOffsetY() { return character->getHeight() / 2; }
+		Player(Renderer*, std::string, long double, std::vector<std::string>, long double, long double, long double, long double, int, int);
+		~Player() { delete object; for (Sprite* each : sprite) delete each; }
+		void playerStep(int, int, long double);
+		void render(int, int, long double);
+		void boost(long double multiplier = 1) { object->addVel(speed * multiplier); boosting = true; }
+		void nonboost() { boosting = false; }
+		void rotate(long double multiplier = 1) { object->rotate(rotationSpeed * multiplier); }
+		void setPosX(long double posX) { object->setPosX(posX); }
+		void setPosY(long double posY) { object->setPosY(posY); }
+		long double getPosX() { return object->getPosX(); }
+		long double getPosY() { return object->getPosY(); }
+		long double getOffsetX() { return object->getWidth() / 2; }
+		long double getOffsetY() { return object->getHeight() / 2; }
+		long double getVel() { return object->getVel(); }
+		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 
 	private:
-		Character* character;
-		Sprite* sprite;
+		Object* object;
+		std::vector<Sprite*> sprite;
 
-		double speed;
-		double rotationSpeed;
-		double velocityCap;
+		bool boosting;
+		int flameSel;
+
+		long double speed;
+		long double rotationSpeed;
+		long double velocityCap;
+
+		int xRotOffset;
+		int yRotOffset;
+		long double rotationalOffset;
 };
-Player::Player(Renderer& renderer, std::string shipTexturePath, double shipScale, std::string flameTexturePath, double flameScale, double speed = 10, double rotationSpeed = 180, double velocityCap = 4) {
-	character = new Character(&renderer, velocityCap);
-	character->loadTexture(shipTexturePath);
-	character->scaleImage(shipScale);
+Player::Player(Renderer* renderer, std::string shipTexturePath, long double shipScale, std::vector<std::string> flameTexturePath, long double flameScale, long double speed = 10, long double rotationSpeed = 180, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0) {
+	object = new Object(renderer);
+	object->loadTexture(shipTexturePath);
+	object->scaleImage(shipScale);
 
-	sprite = new Sprite(&renderer);
-	sprite->loadTexture(flameTexturePath);
+	for (std::string path : flameTexturePath) {
+		Sprite* _sprite = new Sprite(renderer);
+		_sprite->loadTexture(path);
+		_sprite->scaleImage(flameScale);
+		sprite.push_back(_sprite);
+	}
+
+	boosting = false;
+	flameSel = 0;
 
 	this->speed = speed;
 	this->rotationSpeed = rotationSpeed;
 	this->velocityCap = velocityCap;
+
+	this->rotationalOffset = rotationalOffset;
+	this->xRotOffset = xRotOffset;
+	this->yRotOffset = yRotOffset;
 }
-void Player::playerStep(int windowWidth, int windowHeight, double deltaT = 1.0) {
-	character->physicsStep(deltaT);
-	sprite->setPos(character->getPosX(), character->getPosY());
+void Player::render(int windowOffsetX = 0, int windowOffsetY = 0, long double rotationOffset = 0) {
+	object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+
+	if (boosting) {
+		sprite.at(flameSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+		flameSel = rand() % sprite.size();
+	}
+}
+void Player::playerStep(int windowWidth, int windowHeight, long double deltaT = 1.0) {
+	object->physicsStep(deltaT);
+	sprite.at(flameSel)->setPos(object->getPosX(), object->getPosY());
 
 	// right boundary
-	if (character->getPosX() + character->getWidth() > windowWidth) {
-		character->setPosX(windowWidth - character->getWidth());
-		character->setVelX(0);
+	if (object->getPosX() > windowWidth) {
+		object->setPosX(windowWidth);
+		object->setVelX(0);
 	}
 
 	// left boundary
-	if (character->getPosX() < 0) {
-		character->setPosX(0);
-		character->setVelX(0);
+	if (object->getPosX() < 0) {
+		object->setPosX(0);
+		object->setVelX(0);
 	}
 
 	// bottom boundary
-	if (character->getPosY() + character->getHeight() > windowHeight) {
-		character->setPosY(windowHeight - character->getHeight());
-		character->setVelY(0);
+	if (object->getPosY() > windowHeight) {
+		object->setPosY(windowHeight);
+		object->setVelY(0);
 	}
 
 	// upper boundary
-	if (character->getPosY() < 0) {
-		character->setPosY(0);
-		character->setVelY(0);
+	if (object->getPosY() < 0) {
+		object->setPosY(0);
+		object->setVelY(0);
 	}
 
 	// REMOVE
-	//std::cout << character->getVel() << std::endl;
+	//std::cout << object->getVel() << std::endl;
 }
+
+
+class GravityWell_stationary : public GravityWell {
+	public:
+		GravityWell_stationary(long double, long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, int, int);
+		void render(int, int, long double);
+		long double calcGravityMag(int posX, int posY) { return calcGravityWellMag(this->posX, this->posY, posX, posY); }
+		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(this->posX, this->posY, posX, posY); }
+
+	private:
+		Sprite* sprite;
+		Sprite* circle;
+
+		int posX;
+		int posY;
+		long double rotation;
+
+		int xRotOffset;
+		int yRotOffset;
+		long double rotationalOffset;
+};
+GravityWell_stationary::GravityWell_stationary(long double magnitude, long double edgeMagnitude, long double radius, Renderer* renderer, std::string texturePath, std::string circleTexturePath, long double texScale, long double circleTexScale, int posX, int posY, long double rotation, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0)
+	: GravityWell(magnitude, edgeMagnitude, radius)
+{
+	sprite = new Sprite(renderer);
+	sprite->loadTexture(texturePath);
+	sprite->scaleImage(texScale);
+
+	circle = new Sprite(renderer);
+	circle->loadTexture(circleTexturePath);
+	circle->scaleImage(circleTexScale * radius);
+
+	this->posX = posX;
+	this->posY = posY;
+	this->rotation = rotation;
+	sprite->setPos(posX, posY);
+	sprite->setRot(rotation);
+	circle->setPos(posX, posY);
+	circle->setRot(rotation);
+
+	this->rotationalOffset = rotationalOffset;
+	this->xRotOffset = xRotOffset;
+	this->yRotOffset = yRotOffset;
+}
+void GravityWell_stationary::render(int windowOffsetX = 0, int windowOffsetY = 0, long double rotationOffset = 0) {
+	circle->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+	sprite->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+}
+
+class GravityWell_moving : public GravityWell {
+	public:
+		GravityWell_moving(long double, long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, long double, long double, int, int);
+		void step(int, int, long double);
+		void render(int, int, long double);
+		long double calcGravityMag(int posX, int posY) { std::cout << "GravityWell_moving, calcGravityMag" << std::endl; return calcGravityWellMag(object->getPosX(), object->getPosY(), posX, posY); }
+		long double calcGravityRot(int posX, int posY) { std::cout << "GravityWell_moving, calcGravityRot" << std::endl; return calcGravityWellRot(object->getPosX(), object->getPosY(), posX, posY); }
+		void setVel(long double vel) { object->setVel(vel); }
+		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
+	
+	private:
+		Object* object;
+		Sprite* circle;
+
+		int startPosX;
+		int startPosY;
+		long double startRot;
+
+		long double velocity;
+		long double rotationalVelocity;
+
+		int xRotOffset;
+		int yRotOffset;
+		long double rotationalOffset;
+};
+GravityWell_moving::GravityWell_moving(long double magnitude, long double edgeMagnitude, long double radius, Renderer* renderer, std::string texturePath, std::string circleTexturePath, long double texScale, long double circleTexScale, int posX, int posY, long double rotation, long double velocity, long double rotationalVelocity, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0)
+	: GravityWell(magnitude, edgeMagnitude, radius)
+{
+	object = new Object(renderer);
+	object->loadTexture(texturePath);
+	object->scaleImage(texScale);
+
+	circle = new Sprite(renderer);
+	circle->loadTexture(circleTexturePath);
+	circle->scaleImage(circleTexScale * radius);
+
+	this->startPosX = posX;
+	this->startPosY = posY;
+	this->startRot = rotation;
+	object->setPos(posX, posY);
+	object->setRot(rotation);
+	circle->setPos(posX, posY);
+	circle->setRot(rotation);
+
+	this->velocity = velocity;
+	this->rotationalVelocity = rotationalVelocity;
+	object->setVel(velocity);
+	object->setVelR(rotationalVelocity);
+
+	this->rotationalOffset = rotationalOffset;
+	this->xRotOffset = xRotOffset;
+	this->yRotOffset = yRotOffset;
+}
+void GravityWell_moving::render(int windowOffsetX = 0, int windowOffsetY = 0, long double rotationOffset = 0) {
+	circle->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+	object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+}
+void GravityWell_moving::step(int windowWidth, int windowHeight, long double deltaT = 1.0) {
+	object->physicsStep(deltaT);
+	circle->setPos(object->getPosX(), object->getPosY());
+	//std::cout << object->getVel() << std::endl;
+}
+
+#endif
