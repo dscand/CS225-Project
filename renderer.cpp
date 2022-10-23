@@ -204,6 +204,7 @@ void Sprite::rotate(long double magnitude) {
 class GravityWell {
 	public:
 		GravityWell(long double magnitude, long double edgeMagnitude, long double radius) { this->magnitude = magnitude; this->edgeMagnitude = edgeMagnitude; this->radius = radius; }
+		virtual ~GravityWell() {};
 		virtual long double calcGravityMag(int posX, int posY) { std::cout << "ERROR: Undefined, calcGravityMag" << std::endl; return 0; }
 		virtual long double calcGravityRot(int posX, int posY) { std::cout << "ERROR: Undefined, calcGravityRot" << std::endl; return 0; }
 		virtual void render(int, int, long double) {}
@@ -219,7 +220,7 @@ class GravityWell {
 };
 long double GravityWell::calcGravityWellMag(int pos1X, int pos1Y, int pos2X, int pos2Y) {
 	long double distance = calcDistance(pos1X, pos1Y, pos2X, pos2Y);
-	if (distance < radius && radius > 10) {
+	if (distance < radius) {
 		distance /= 1000;
 		//std::cout << magnitude/(distance*distance) << std::endl;
 		return magnitude/(distance*distance);
@@ -244,6 +245,8 @@ class Object : public Sprite {
 		void setVelY(long double velY) { this->velY = velY; }
 		void setVelR(long double velR) { this->velR = velR; }
 		long double getVel() { return sqrt(velX*velX + velY*velY); }
+		long double getVelX() { return velX; }
+		long double getVelY() { return velY; }
 		long double getVelR() { return velR; }
 		void addInfluence(GravityWell* influence) { influences.push_back(influence); };
 		//void removeInfluence(GravityWell*); // TODO
@@ -267,11 +270,20 @@ void Object::physicsStep(long double deltaT = 1.0) {
 	//Influences
 	for (GravityWell* influence : influences) {
 		long double magnitude = influence->calcGravityMag(getPosX(), getPosY());
-		long double direction = influence->calcGravityRot(getPosX(), getPosY());
 
-		velX += sin(degrees2radians(direction)) * magnitude * deltaT;
-		velY += -cos(degrees2radians(direction)) * magnitude * deltaT;
+		if (magnitude > 0) {
+			long double direction = influence->calcGravityRot(getPosX(), getPosY());
+
+			velX += sin(degrees2radians(direction)) * magnitude * deltaT;
+			velY += -cos(degrees2radians(direction)) * magnitude * deltaT;
+		}
 	}
+
+	const int max = 1000;
+	if (velX > max) velX = max;
+	else if (velX < -max) velX = -max;
+	if (velY > max) velY = max;
+	else if (velY < -max) velY = -max;
 
 	moveX(velX * deltaT);
 	moveY(velY * deltaT);

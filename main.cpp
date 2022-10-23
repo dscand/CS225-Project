@@ -21,67 +21,19 @@ int WinMain(int argc, char* argv[]) {
 	std::cout << "Starting" << std::endl;
 	srand(time(NULL));
 
-	Level level = level_1;
-	level.init();
+	Renderer renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 
-	bool stop = false;
-	bool pause = false;
-	float timeSpeed = 1;
-	LTimer dtTimer;
-	while(!stop) {
-		float deltaT = dtTimer.getTicks() / 1000.f / timeSpeed;
-		dtTimer.start();
+	std::cout << "Level 1, Start" << std::endl;
+	Level* level = get_level_1();
+	level->init(&renderer);
 
-		SDL_Event event;
-		while (SDL_PollEvent(&event)) {
-			switch (event.type) {
-				case SDL_QUIT:
-					// handling of close button
-					stop = true;
-					break;
-				case SDL_KEYDOWN:
-					switch (event.key.keysym.scancode) {
-						case SDL_SCANCODE_ESCAPE:
-							pause = !pause;
-							break;
-						case SDL_SCANCODE_1:
-						case SDL_SCANCODE_KP_1:
-							timeSpeed = 1;
-							break;
-						case SDL_SCANCODE_2:
-						case SDL_SCANCODE_KP_2:
-							timeSpeed = 2;
-							break;
-						case SDL_SCANCODE_3:
-						case SDL_SCANCODE_KP_3:
-							timeSpeed = 4;
-							break;
-						case SDL_SCANCODE_4:
-						case SDL_SCANCODE_KP_4:
-							timeSpeed = 8;
-							break;
+	while(!level->levelController->stop) { level->step(); }
 
-						default:
-							break;
-					}
-				
-				default:
-					break;
-			}
-		}
+	level->close();
+	delete level;
+	std::cout << "Level 1, End" << std::endl;
 
-		if(pause) {
-			// TODO: Pause Menu
-		}
-		else {
-			level.step(deltaT);
-		}
-
-		//std::cout << deltaT << std::endl;
-		// calculates to 60 fps
-		SDL_Delay(1000 / 60);
-	}
 
 	std::cout << "Exitting" << std::endl;
 	return 0;
