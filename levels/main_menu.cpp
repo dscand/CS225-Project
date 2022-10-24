@@ -13,10 +13,8 @@ namespace _level_1 {
 			long double magnitude = 10;
 			long double radius = 500;
 			std::string texturePath = "Textures/planet4.png";
-			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
-			long double circleTexScale = 1./64.;
-			int posX = 512;
+			int posX = 1012;
 			int posY = 512;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
