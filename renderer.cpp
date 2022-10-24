@@ -35,7 +35,7 @@ void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
 	}
-	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN); //SDL_WINDOW_RESIZABLE
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 }

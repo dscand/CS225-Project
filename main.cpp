@@ -18,7 +18,7 @@ int WinMain(int argc, char* argv[]) {
 	std::cout << "Starting" << std::endl;
 	srand(time(NULL));
 
-	Renderer renderer(840, 840);
+	Renderer renderer(840, 620);
 	renderer.init();
 
 
