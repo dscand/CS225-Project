@@ -4,7 +4,7 @@ namespace _level_1 {
 		level->renderer = renderer;
 
 		{
-			std::string backgroundTexturePath = "Textures/background1.png";
+			std::string backgroundTexturePath = "Textures/background4.png";
 			long double imageScale = 2;
 			level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 		}
