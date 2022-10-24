@@ -36,16 +36,14 @@ void gameLevelStep(Level* level) {
 
 	level->renderer->clear();
 
-	int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->GAME_WIDTH - level->renderer->getWindowWidth());
-	int centerY = level->renderer->centerYCal(level->player->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->GAME_HEIGHT - level->renderer->getWindowHeight());
 
 	// Render Update
-	level->background->render(centerX, centerY);
+	level->background->render(0, 0);
 	for (GravityWell_stationary* gravityWell : level->gravityWells_stationary) {
-			gravityWell->render(centerX, centerY);
+			gravityWell->render(0, 0);
 	}
 	for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
-			gravityWell->render(centerX, centerY);
+			gravityWell->render(0, 0);
 	}
 
 	level->renderer->update();
