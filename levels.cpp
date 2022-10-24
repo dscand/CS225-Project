@@ -12,32 +12,53 @@ class Level {
 	private:
 		static int nextId;
 		std::function<void(Level*, Renderer*)> _init;
-		std::function<int(Level*)> _close;
+		std::function<int(Level*)> _end;
+		std::function<void(Level*)> _close;
 		std::function<void(Level*)> _step;
 		
 	public:
-		Level(std::function<void(Level*, Renderer*)>, std::function<int(Level*)>);
-		Level(std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>);
+		Level(std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
+		~Level() { close(); }
 		void init(Renderer* renderer) { _init(this, renderer); }
 		void step() { _step(this); }
-		int close() { return _close(this); }
-		LevelController* levelController;
+		int end() { return _end(this); }
+		void close() { return _close(this); }
 		Renderer* renderer;
 		Background* background;
 		Player* player;
 		std::vector<GravityWell_stationary*> gravityWells_stationary;
 		std::vector<GravityWell_moving*> gravityWells_moving;
+
 		const int GAME_WIDTH = 2048;
 		const int GAME_HEIGHT = 2048;
+
+		LTimer gameTime;
+		LTimer deathTime;
+
 		bool alive;
+		bool stop;
+		bool pause;
+		LTimer dtTimer;
+		float timeSpeed;
+
+		int completionTime;
 };
 int Level::nextId = 0;
 void gameLevelStep(Level*);
 
-Level::Level(std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> close) {
+Level::Level(std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
 	_init = init;
+	_end = end;
 	_close = close;
-	_step = gameLevelStep;
+	_step = step;
+
+	alive = true;
+	stop = false;
+	pause = false;
+	timeSpeed = 1;
+	completionTime = 0;
+
+	gameTime.start();
 
 	gravityWells_stationary = {};
 	gravityWells_moving = {};
@@ -45,49 +66,41 @@ Level::Level(std::function<void(Level*, Renderer*)> init, std::function<int(Leve
 	id = nextId;
 	nextId++;
 }
-Level::Level(std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> close, std::function<void(Level*)> step) {
-	_init = init;
-	_close = close;
-	_step = step;
-
-	id = nextId;
-	nextId++;
-}
 
 void gameLevelStep(Level* level) {
-	float deltaT = level->levelController->dtTimer.getTicks() / 1000.f;
-	if (level->levelController->timeSpeed != 1) {
-		deltaT /= level->levelController->timeSpeed;
+	float deltaT = level->dtTimer.getTicks() / 1000.f;
+	if(level->timeSpeed != 1) {
+		deltaT /= level->timeSpeed;
 	}
-	level->levelController->dtTimer.start();
+	level->dtTimer.start();
 
 	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
+	if(SDL_PollEvent(&event)) {
 		switch (event.type) {
 			case SDL_QUIT:
 				// handling of close button
-				level->levelController->stop = true;
+				level->stop = true;
 				break;
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.scancode) {
 					case SDL_SCANCODE_ESCAPE:
-						level->levelController->pause = !level->levelController->pause;
+						level->pause = !level->pause;
 						break;
 					case SDL_SCANCODE_1:
 					case SDL_SCANCODE_KP_1:
-						level->levelController->timeSpeed = 1;
+						level->timeSpeed = 1;
 						break;
 					case SDL_SCANCODE_2:
 					case SDL_SCANCODE_KP_2:
-						level->levelController->timeSpeed = 2;
+						level->timeSpeed = 2;
 						break;
 					case SDL_SCANCODE_3:
 					case SDL_SCANCODE_KP_3:
-						level->levelController->timeSpeed = 4;
+						level->timeSpeed = 4;
 						break;
 					case SDL_SCANCODE_4:
 					case SDL_SCANCODE_KP_4:
-						level->levelController->timeSpeed = 8;
+						level->timeSpeed = 8;
 						break;
 
 					default:
@@ -99,7 +112,7 @@ void gameLevelStep(Level* level) {
 		}
 	}
 
-	if(level->levelController->pause) {
+	if(level->pause) {
 		// TODO: Pause Menu
 	}
 	else {
@@ -128,12 +141,26 @@ void gameLevelStep(Level* level) {
 		level->player->playerStep(level->GAME_WIDTH, level->GAME_HEIGHT, deltaT);
 
 		if (!level->player->isAlive()) {
-			if (!level->levelController->deathTime.isStarted()) {
-				level->levelController->deathTime.start();
+			if (!level->deathTime.isStarted()) {
+				level->deathTime.start();
+				level->player->explosionIndex = 1;
+				level->completionTime = level->end();
 			} 
 			else {
-				if (level->levelController->deathTime.getTicks() > 4000) {
-					level->levelController->stop = true;
+				const int explosionTime = 500; // ms
+				const int deathTime = 4000; // ms
+				int ticks = level->deathTime.getTicks();
+				if (ticks > deathTime) {
+					level->stop = true;
+				}
+				else if (ticks > 3 * explosionTime) {
+					level->player->explosionIndex = 0;
+				}
+				else if (ticks > 2 * explosionTime) {
+					level->player->explosionIndex = 3;
+				}
+				else if (ticks > explosionTime) {
+					level->player->explosionIndex = 2;
 				}
 			}
 		}
@@ -162,12 +189,47 @@ void gameLevelStep(Level* level) {
 	SDL_Delay(1000 / 60);
 }
 
+
+class LevelController {
+	private:
+		std::function<Level*()> levelFunction;
+
+	public:
+		LevelController(std::function<Level*()>);
+		~LevelController() { levelClose(); };
+
+		Level* level;
+		void levelOpen(Renderer* renderer);
+		void levelRestart();
+		int levelEnd();
+		void levelClose();
+};
+LevelController::LevelController(std::function<Level*()> levelFunction) {
+	level = NULL;
+	this->levelFunction = levelFunction;
+}
+void LevelController::levelOpen(Renderer* renderer) {
+	levelClose();
+	level = this->levelFunction();
+	level->init(renderer);
+}
+void LevelController::levelClose() {
+	delete level;
+	level = nullptr;
+}
+void LevelController::levelRestart() {
+	Renderer* renderer = level->renderer;
+	levelClose();
+	levelOpen(renderer);
+}
+
+
 #include "levels/level_menu.cpp"
 Level* get_level_menu() {
-	return new Level(_level_menu::init, _level_menu::close, _level_menu::step);
+	return new Level(_level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
 }
 
 #include "levels/level_1.cpp"
 Level* get_level_1() {
-	return new Level(_level_1::init, _level_1::close);
+	return new Level(_level_1::init, _level_1::end, _level_1::close);
 }

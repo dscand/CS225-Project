@@ -10,11 +10,11 @@ class Renderer {
 		int windowWidth;
 		int windowHeight;
 	public:
-		Renderer(int windowWidth, int windowHeight) { this->windowWidth = windowWidth; this->windowHeight = windowHeight; }
+		Renderer(int, int);
 		~Renderer() { close(); }
 		int getWindowWidth() { return windowWidth; }
 		int getWindowHeight() { return windowHeight; }
-		bool init();
+		void init();
 		void close();
 		SDL_Texture* loadTexture(SDL_Surface* textureSurf) { return SDL_CreateTextureFromSurface(rend, textureSurf); }
 		void clear();
@@ -23,18 +23,17 @@ class Renderer {
 		int centerXCal(int, int, int);
 		int centerYCal(int, int, int);
 };
-bool Renderer::init() {
-	bool success = true;
-
+Renderer::Renderer(int windowWidth, int windowHeight) {
+	this->windowWidth = windowWidth;
+	this->windowHeight = windowHeight;
+}
+void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-		success = false;
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
 	}
 	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, 0);
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
-
-	return success;
 }
 void Renderer::close() {
 	SDL_DestroyRenderer(rend);
@@ -165,7 +164,7 @@ class Sprite : public RTexture {
 		void moveY(long double magnitude) { posY += magnitude; }
 		void moveForward(long double);
 		void rotate(long double);
-		void setRot(long double rotation) { this->rotation = rotation; }
+		void setRot(long double);
 		long double getRot() { return rotation; }
 		void render(int, int, long double);
 
@@ -200,10 +199,22 @@ void Sprite::rotate(long double magnitude) {
 		rotation = (360.0 * (-i + 1)) + rotation;
 	}
 }
+void Sprite::setRot(long double rotation) {
+	if (rotation >= 360.0) {
+		int i = rotation / 360.0;
+		rotation -= 360.0 * i;
+	}
+	if (rotation < 0) {
+		int i = rotation / 360.0;
+		rotation = (360.0 * (-i + 1)) + rotation;
+	}
+
+	this->rotation = rotation;
+}
 
 class GravityWell {
 	public:
-		GravityWell(long double magnitude, long double edgeMagnitude, long double radius) { this->magnitude = magnitude; this->edgeMagnitude = edgeMagnitude; this->radius = radius; }
+		GravityWell(long double magnitude, long double radius) { this->magnitude = magnitude; this->radius = radius; }
 		virtual ~GravityWell() {};
 		virtual long double calcGravityMag(int posX, int posY) { std::cout << "ERROR: Undefined, calcGravityMag" << std::endl; return 0; }
 		virtual long double calcGravityRot(int posX, int posY) { std::cout << "ERROR: Undefined, calcGravityRot" << std::endl; return 0; }
@@ -215,7 +226,6 @@ class GravityWell {
 
 	private:
 		long double magnitude;
-		long double edgeMagnitude;
 		long double radius;
 };
 long double GravityWell::calcGravityWellMag(int pos1X, int pos1Y, int pos2X, int pos2Y) {
