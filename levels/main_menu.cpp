@@ -1,3 +1,61 @@
+void gameLevelStep(Level* level) {
+	float deltaT = level->dtTimer.getTicks() / 1000.f;
+	if(level->timeSpeed != 1) {
+		deltaT /= level->timeSpeed;
+	}
+	level->dtTimer.start();
+
+	SDL_Event event;
+	if(SDL_PollEvent(&event)) {
+		switch (event.type) {
+			case SDL_QUIT:
+				// handling of close button
+				level->stop = true;
+				break;
+			case SDL_KEYDOWN:
+				switch (event.key.keysym.scancode) {
+					case SDL_SCANCODE_ESCAPE:
+						level->pause = !level->pause;
+						break;
+					
+					default:
+						break;
+				}
+				
+			default:
+				break;
+		}
+	}
+
+
+
+	// Physics Update
+	for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
+		gravityWell->step(level->GAME_WIDTH, level->GAME_HEIGHT, deltaT);
+	}
+
+	level->renderer->clear();
+
+	int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->GAME_WIDTH - level->renderer->getWindowWidth());
+	int centerY = level->renderer->centerYCal(level->player->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->GAME_HEIGHT - level->renderer->getWindowHeight());
+
+	// Render Update
+	level->background->render(centerX, centerY);
+	for (GravityWell_stationary* gravityWell : level->gravityWells_stationary) {
+			gravityWell->render(centerX, centerY);
+	}
+	for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
+			gravityWell->render(centerX, centerY);
+	}
+
+	level->renderer->update();
+}
+
+	//std::cout << deltaT << std::endl;
+	// calculates to 60 fps
+	SDL_Delay(1000 / 60);
+}
+	
 namespace _level_menu {
 	void init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
