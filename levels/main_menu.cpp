@@ -1,3 +1,5 @@
+#include "menu.cpp"
+
 void gameLevelStep(Level* level) {
 	float deltaT = level->dtTimer.getTicks() / 1000.f;
 	if(level->timeSpeed != 1) {
@@ -21,7 +23,19 @@ void gameLevelStep(Level* level) {
 					default:
 						break;
 				}
-				
+			case SDL_MOUSEMOTION:
+				int x, y;
+        			SDL_GetMouseState( &x, &y );
+				break;
+			case SDL_MOUSEBUTTONDOWN:
+				int x, y;
+        			SDL_GetMouseState( &x, &y );
+				break;
+			case SDL_SDL_MOUSEBUTTONUP:
+				int x, y;
+        			SDL_GetMouseState( &x, &y );
+				break;
+			
 			default:
 				break;
 		}
