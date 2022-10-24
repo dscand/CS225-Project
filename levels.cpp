@@ -15,22 +15,24 @@ class Level {
 		std::function<int(Level*)> _end;
 		std::function<void(Level*)> _close;
 		std::function<void(Level*)> _step;
+
+		int gameWidth;
+		int gameHeight;
 		
 	public:
-		Level(std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
+		Level(int, int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
 		~Level() { close(); }
 		void init(Renderer* renderer) { _init(this, renderer); }
 		void step() { _step(this); }
 		int end() { return _end(this); }
 		void close() { return _close(this); }
+		int getGameWidth() { return gameWidth; }
+		int getGameHeight() { return gameHeight; }
 		Renderer* renderer;
 		Background* background;
 		Player* player;
 		std::vector<GravityWell_stationary*> gravityWells_stationary;
 		std::vector<GravityWell_moving*> gravityWells_moving;
-
-		const int GAME_WIDTH = 2048;
-		const int GAME_HEIGHT = 2048;
 
 		LTimer gameTime;
 		LTimer deathTime;
@@ -46,11 +48,14 @@ class Level {
 int Level::nextId = 0;
 void gameLevelStep(Level*);
 
-Level::Level(std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
+Level::Level(int gameWidth, int gameHeight, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
 	_init = init;
 	_end = end;
 	_close = close;
 	_step = step;
+
+	this->gameWidth = gameWidth;
+	this->gameHeight = gameHeight;
 
 	alive = true;
 	stop = false;
@@ -75,12 +80,29 @@ void gameLevelStep(Level* level) {
 	level->dtTimer.start();
 
 	SDL_Event event;
-	if(SDL_PollEvent(&event)) {
+	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
+			// close/X button
 			case SDL_QUIT:
-				// handling of close button
 				level->stop = true;
 				break;
+			case SDL_WINDOWEVENT:
+				switch (event.window.event) {
+					case SDL_WINDOWEVENT_CLOSE:
+						level->stop = true;
+						break;
+					case SDL_WINDOWEVENT_MINIMIZED:
+					case SDL_WINDOWEVENT_FOCUS_LOST:
+						level->pause = true;
+						break;
+					case SDL_WINDOWEVENT_SIZE_CHANGED:
+						level->renderer->setWindow(event.window.data1, event.window.data2);
+						break;
+
+					default:
+						break;
+				}
+
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.scancode) {
 					case SDL_SCANCODE_ESCAPE:
@@ -112,7 +134,7 @@ void gameLevelStep(Level* level) {
 		}
 	}
 
-	if(level->pause) {
+	if (level->pause) {
 		// TODO: Pause Menu
 	}
 	else {
@@ -136,9 +158,9 @@ void gameLevelStep(Level* level) {
 
 		// Physics Update
 		for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
-			gravityWell->step(level->GAME_WIDTH, level->GAME_HEIGHT, deltaT);
+			gravityWell->step(deltaT);
 		}
-		level->player->playerStep(level->GAME_WIDTH, level->GAME_HEIGHT, deltaT);
+		level->player->playerStep(level->getGameWidth(), level->getGameHeight(), deltaT);
 
 		if (!level->player->isAlive()) {
 			if (!level->deathTime.isStarted()) {
@@ -165,11 +187,13 @@ void gameLevelStep(Level* level) {
 			}
 		}
 
+		//std::cout << level->gravityWells_moving[0]->getVel() << std::endl;
+
 
 		level->renderer->clear();
 
-		int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->GAME_WIDTH - level->renderer->getWindowWidth());
-		int centerY = level->renderer->centerYCal(level->player->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->GAME_HEIGHT - level->renderer->getWindowHeight());
+		int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->getGameWidth() - level->renderer->getWindowWidth());
+		int centerY = level->renderer->centerYCal(level->player->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->getGameHeight() - level->renderer->getWindowHeight());
 
 		// Render Update
 		level->background->render(centerX, centerY);
@@ -226,10 +250,10 @@ void LevelController::levelRestart() {
 
 #include "levels/level_menu.cpp"
 Level* get_level_menu() {
-	return new Level(_level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
+	return new Level(2048, 2048, _level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
 }
 
 #include "levels/level_1.cpp"
 Level* get_level_1() {
-	return new Level(_level_1::init, _level_1::end, _level_1::close);
+	return new Level(2048, 2048, _level_1::init, _level_1::end, _level_1::close);
 }

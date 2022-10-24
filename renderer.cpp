@@ -14,6 +14,7 @@ class Renderer {
 		~Renderer() { close(); }
 		int getWindowWidth() { return windowWidth; }
 		int getWindowHeight() { return windowHeight; }
+		void setWindow(int width, int height) { windowWidth = width; windowHeight = height; }
 		void init();
 		void close();
 		SDL_Texture* loadTexture(SDL_Surface* textureSurf) { return SDL_CreateTextureFromSurface(rend, textureSurf); }
@@ -26,12 +27,15 @@ class Renderer {
 Renderer::Renderer(int windowWidth, int windowHeight) {
 	this->windowWidth = windowWidth;
 	this->windowHeight = windowHeight;
+
+	win = nullptr;
+	rend = nullptr;
 }
 void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
 	}
-	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, 0);
+	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 }
@@ -46,6 +50,7 @@ void Renderer::close() {
 }
 void Renderer::clear() {
 	SDL_RenderClear(rend);
+	//SDL_GetWindowSize(win, &windowWidth, &windowHeight);
 }
 void Renderer::update() {
 	SDL_RenderPresent(rend);

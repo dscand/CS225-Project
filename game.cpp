@@ -161,7 +161,7 @@ void Player::playerStep(int gameWidth, int gameHeight, long double deltaT = 1.0)
 	} */
 
 
-	const int deathVelocity = 1000;
+	const int deathVelocity = 100;
 
 	// right boundary
 	if (object->getPosX() > gameWidth) {
@@ -197,7 +197,7 @@ void Player::playerStep(int gameWidth, int gameHeight, long double deltaT = 1.0)
 
 	// REMOVE
 	//std::cout << object->getVel() << " : " << object->getVelX() << ", " << object->getVelY() << std::endl;
-	std::cout << object->getRot() << std::endl;
+	//std::cout << object->getRot() << std::endl;
 }
 
 
@@ -253,11 +253,12 @@ class GravityWell_moving : public GravityWell {
 	public:
 		GravityWell_moving(long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, long double, long double, int, int);
 		~GravityWell_moving() { delete object; object = nullptr; delete circle; circle = nullptr; }
-		void step(int, int, long double);
+		void step(long double);
 		void render(int, int, long double);
 		long double calcGravityMag(int posX, int posY) { return calcGravityWellMag(object->getPosX(), object->getPosY(), posX, posY); }
 		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(object->getPosX(), object->getPosY(), posX, posY); }
 		void setVel(long double vel) { object->setVel(vel); }
+		long double getVel() { return object->getVel(); }
 		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 	
 	private:
@@ -307,7 +308,7 @@ void GravityWell_moving::render(int windowOffsetX = 0, int windowOffsetY = 0, lo
 	circle->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
 	object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
 }
-void GravityWell_moving::step(int windowWidth, int windowHeight, long double deltaT = 1.0) {
+void GravityWell_moving::step(long double deltaT = 1.0) {
 	object->physicsStep(deltaT);
 	circle->setPos(object->getPosX(), object->getPosY());
 	//std::cout << object->getVel() << std::endl;
