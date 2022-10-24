@@ -75,7 +75,7 @@ void gameLevelStep(Level* level) {
 	level->dtTimer.start();
 
 	SDL_Event event;
-	if(SDL_PollEvent(&event)) {
+	while (SDL_PollEvent(&event)) {
 		switch (event.type) {
 			case SDL_QUIT:
 				// handling of close button
@@ -112,7 +112,7 @@ void gameLevelStep(Level* level) {
 		}
 	}
 
-	if(level->pause) {
+	if (level->pause) {
 		// TODO: Pause Menu
 	}
 	else {
