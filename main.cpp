@@ -22,19 +22,30 @@ int WinMain(int argc, char* argv[]) {
 	srand(time(NULL));
 
 	Renderer renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	renderer.init();
 
 
-	std::cout << "Level 1, Start" << std::endl;
-	Level* level = get_level_1();
-	level->init(&renderer);
+	std::cout << "Level 1, Init" << std::endl;
+	LevelController* levelController = new LevelController(get_level_1);
+	levelController->levelOpen(&renderer);
 
-	while(!level->levelController->stop) { level->step(); }
-
-	level->close();
-	delete level;
-	std::cout << "Level 1, End" << std::endl;
+	int i = 2;
+	while(i > 0) {
+		std::cout << "Level 1, Start" << std::endl;
+		while(!levelController->level->stop) { levelController->level->step(); }
+		std::cout << (double)levelController->level->completionTime / 1000. << std::endl;
+		std::cout << "Level 1, End" << std::endl;
+		levelController->levelRestart();
+		i--;
+	}
 
 
 	std::cout << "Exitting" << std::endl;
+
+	levelController->levelClose();
+	delete levelController;
+	levelController = nullptr;
+
+	renderer.close();
 	return 0;
 }

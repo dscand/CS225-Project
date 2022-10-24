@@ -8,7 +8,7 @@
 class Background {
 	public:
 		Background(Renderer*, std::string, long double);
-		~Background() { delete texture; }
+		~Background() { delete texture; texture = nullptr; }
 		void render(int, int);
 
 	private:
@@ -25,8 +25,8 @@ void Background::render(int windowOffsetX = 0, int windowOffsetY = 0) {
 
 class Player {
 	public:
-		Player(Renderer*, std::string, std::string, long double, std::vector<std::string>, long double, long double, long double, long double, int, int);
-		~Player() { delete object; for (Sprite* each : sprite) delete each; }
+		Player(Renderer*, std::string, std::string, long double, std::vector<std::string>, long double, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, long double, long double, long double, long double, int, int);
+		~Player() { delete object; object = nullptr; spriteFlame.clear(); spriteExplosion1.clear(); spriteExplosion2.clear(); spriteExplosion3.clear(); }
 		void playerStep(int, int, long double);
 		void render(int, int, long double);
 		void boost(long double multiplier = 1) { if (alive) object->addVel(speed * multiplier); boosting = true; }
@@ -41,15 +41,20 @@ class Player {
 		long double getVel() { return object->getVel(); }
 		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 		bool isAlive() { return alive; }
+		int explosionIndex;
 
 	private:
 		Object* object;
 		Sprite* spriteBroken;
-		std::vector<Sprite*> sprite;
+		std::vector<Sprite*> spriteFlame;
+		std::vector<Sprite*> spriteExplosion1;
+		std::vector<Sprite*> spriteExplosion2;
+		std::vector<Sprite*> spriteExplosion3;
 
 		bool alive;
 		bool boosting;
 		int flameSel;
+		int explosionSel;
 
 		long double speed;
 		long double rotationSpeed;
@@ -59,7 +64,7 @@ class Player {
 		int yRotOffset;
 		long double rotationalOffset;
 };
-Player::Player(Renderer* renderer, std::string shipTexturePath, std::string shipBrokenTexturePath, long double shipScale, std::vector<std::string> flameTexturePath, long double flameScale, long double speed = 10, long double rotationSpeed = 180, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0) {
+Player::Player(Renderer* renderer, std::string shipTexturePath, std::string shipBrokenTexturePath, long double shipScale, std::vector<std::string> flameTexturePath, long double flameScale, std::vector<std::string> explosion1TexturePath, std::vector<std::string> explosion2TexturePath, std::vector<std::string> explosion3TexturePath, long double explosionScale, long double speed = 10, long double rotationSpeed = 180, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0) {
 	object = new Object(renderer);
 	object->loadTexture(shipTexturePath);
 	object->scaleImage(shipScale);
@@ -72,12 +77,33 @@ Player::Player(Renderer* renderer, std::string shipTexturePath, std::string ship
 		Sprite* _sprite = new Sprite(renderer);
 		_sprite->loadTexture(path);
 		_sprite->scaleImage(flameScale);
-		sprite.push_back(_sprite);
+		spriteFlame.push_back(_sprite);
+	}
+
+	for (std::string path : explosion1TexturePath) {
+		Sprite* _sprite = new Sprite(renderer);
+		_sprite->loadTexture(path);
+		_sprite->scaleImage(explosionScale);
+		spriteExplosion1.push_back(_sprite);
+	}
+	for (std::string path : explosion2TexturePath) {
+		Sprite* _sprite = new Sprite(renderer);
+		_sprite->loadTexture(path);
+		_sprite->scaleImage(explosionScale);
+		spriteExplosion2.push_back(_sprite);
+	}
+	for (std::string path : explosion3TexturePath) {
+		Sprite* _sprite = new Sprite(renderer);
+		_sprite->loadTexture(path);
+		_sprite->scaleImage(explosionScale);
+		spriteExplosion3.push_back(_sprite);
 	}
 
 	alive = true;
 	boosting = false;
 	flameSel = 0;
+	explosionSel = 0;
+	explosionIndex = 0;
 
 	this->speed = speed;
 	this->rotationSpeed = rotationSpeed;
@@ -90,20 +116,41 @@ Player::Player(Renderer* renderer, std::string shipTexturePath, std::string ship
 void Player::render(int windowOffsetX = 0, int windowOffsetY = 0, long double rotationOffset = 0) {
 	if (alive)
 		object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
-	else
+	else if (explosionIndex == 0)
 		spriteBroken->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
 
 	if (boosting && alive) {
-		sprite.at(flameSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
-		flameSel = rand() % sprite.size();
+		spriteFlame.at(flameSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+		flameSel = rand() % spriteFlame.size();
 	}
+	else if (!alive) {
+		if (explosionIndex == 1) {
+			spriteExplosion1.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+			explosionSel = rand() % spriteExplosion2.size();
+		}
+		else if (explosionIndex == 2) {
+			spriteExplosion2.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+			explosionSel = rand() % spriteExplosion2.size();
+		}
+		else if (explosionIndex == 3) {
+			spriteExplosion3.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+			explosionSel = rand() % spriteExplosion3.size();
+		}
+	}
+	
 }
 void Player::playerStep(int gameWidth, int gameHeight, long double deltaT = 1.0) {
 	object->physicsStep(deltaT);
 	spriteBroken->setPos(object->getPosX(), object->getPosY());
-	sprite.at(flameSel)->setPos(object->getPosX(), object->getPosY());
+	spriteFlame.at(flameSel)->setPos(object->getPosX(), object->getPosY());
 
-	/* if (!alive) {
+	if(!alive) {
+		spriteExplosion1.at(explosionSel)->setPos(object->getPosX(), object->getPosY());
+		spriteExplosion2.at(explosionSel)->setPos(object->getPosX(), object->getPosY());
+		spriteExplosion3.at(explosionSel)->setPos(object->getPosX(), object->getPosY());
+	}
+
+	/* if(!alive) {
 		const double decay = 0.96;
 
 		if (abs(object->getVelX()) > 1) object->setVelX(object->getVelX() * decay);
@@ -113,44 +160,51 @@ void Player::playerStep(int gameWidth, int gameHeight, long double deltaT = 1.0)
 		else object->setVelY(0);
 	} */
 
+
+	const int deathVelocity = 1000;
+
 	// right boundary
 	if (object->getPosX() > gameWidth) {
 		object->setPosX((2 * gameWidth) - object->getPosX());
 		object->setVelX(-object->getVelX());
-		alive = false;
+		if (abs(object->getVelX()) > deathVelocity) alive = false;
+		//if (180 - object->getRot() > 0) object->setRot(-object->getRot());
 	}
 
 	// left boundary
 	if (object->getPosX() < 0) {
 		object->setPosX(-object->getPosX());
 		object->setVelX(-object->getVelX());
-		alive = false;
+		if (abs(object->getVelX()) > deathVelocity) alive = false;
+		//if (180 - object->getRot() < 0) object->setRot(-object->getRot());
 	}
 
 	// bottom boundary
 	if (object->getPosY() > gameHeight) {
 		object->setPosY((2 * gameHeight) - object->getPosY());
 		object->setVelY(-object->getVelY());
-		alive = false;
+		if (abs(object->getVelY()) > deathVelocity) alive = false;
+		//if (object->getRot() < 270 && object->getRot() > 90) object->setRot(180-object->getRot());
 	}
 
 	// upper boundary
 	if (object->getPosY() < 0) {
 		object->setPosY(-object->getPosY());
 		object->setVelY(-object->getVelY());
-		alive = false;
+		if (abs(object->getVelY()) > deathVelocity) alive = false;
+		//if (object->getRot() > 270 || object->getRot() < 90) object->setRot(180-object->getRot());
 	}
 
 	// REMOVE
-	//std::cout << object->getVel() << std::endl;
-	//std::cout << object->getVelX() << ", " << object->getVelY() << std::endl;
+	//std::cout << object->getVel() << " : " << object->getVelX() << ", " << object->getVelY() << std::endl;
+	std::cout << object->getRot() << std::endl;
 }
 
 
 class GravityWell_stationary : public GravityWell {
 	public:
-		GravityWell_stationary(long double, long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, int, int);
-		~GravityWell_stationary() { delete sprite; delete circle; }
+		GravityWell_stationary(long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, int, int);
+		~GravityWell_stationary() { delete sprite; sprite = nullptr; delete circle; circle = nullptr; }
 		void render(int, int, long double);
 		long double calcGravityMag(int posX, int posY) { return calcGravityWellMag(this->posX, this->posY, posX, posY); }
 		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(this->posX, this->posY, posX, posY); }
@@ -167,8 +221,8 @@ class GravityWell_stationary : public GravityWell {
 		int yRotOffset;
 		long double rotationalOffset;
 };
-GravityWell_stationary::GravityWell_stationary(long double magnitude, long double edgeMagnitude, long double radius, Renderer* renderer, std::string texturePath, std::string circleTexturePath, long double texScale, long double circleTexScale, int posX, int posY, long double rotation, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0)
-	: GravityWell(magnitude, edgeMagnitude, radius)
+GravityWell_stationary::GravityWell_stationary(long double magnitude, long double radius, Renderer* renderer, std::string texturePath, std::string circleTexturePath, long double texScale, long double circleTexScale, int posX, int posY, long double rotation, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0)
+	: GravityWell(magnitude, radius)
 {
 	sprite = new Sprite(renderer);
 	sprite->loadTexture(texturePath);
@@ -197,12 +251,12 @@ void GravityWell_stationary::render(int windowOffsetX = 0, int windowOffsetY = 0
 
 class GravityWell_moving : public GravityWell {
 	public:
-		GravityWell_moving(long double, long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, long double, long double, int, int);
-		~GravityWell_moving() { delete object; delete circle; }
+		GravityWell_moving(long double, long double, Renderer*, std::string, std::string, long double, long double, int, int, long double, long double, long double, long double, int, int);
+		~GravityWell_moving() { delete object; object = nullptr; delete circle; circle = nullptr; }
 		void step(int, int, long double);
 		void render(int, int, long double);
-		long double calcGravityMag(int posX, int posY) { std::cout << "GravityWell_moving, calcGravityMag" << std::endl; return calcGravityWellMag(object->getPosX(), object->getPosY(), posX, posY); }
-		long double calcGravityRot(int posX, int posY) { std::cout << "GravityWell_moving, calcGravityRot" << std::endl; return calcGravityWellRot(object->getPosX(), object->getPosY(), posX, posY); }
+		long double calcGravityMag(int posX, int posY) { return calcGravityWellMag(object->getPosX(), object->getPosY(), posX, posY); }
+		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(object->getPosX(), object->getPosY(), posX, posY); }
 		void setVel(long double vel) { object->setVel(vel); }
 		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 	
@@ -221,8 +275,8 @@ class GravityWell_moving : public GravityWell {
 		int yRotOffset;
 		long double rotationalOffset;
 };
-GravityWell_moving::GravityWell_moving(long double magnitude, long double edgeMagnitude, long double radius, Renderer* renderer, std::string texturePath, std::string circleTexturePath, long double texScale, long double circleTexScale, int posX, int posY, long double rotation, long double velocity, long double rotationalVelocity, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0)
-	: GravityWell(magnitude, edgeMagnitude, radius)
+GravityWell_moving::GravityWell_moving(long double magnitude, long double radius, Renderer* renderer, std::string texturePath, std::string circleTexturePath, long double texScale, long double circleTexScale, int posX, int posY, long double rotation, long double velocity, long double rotationalVelocity, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0)
+	: GravityWell(magnitude, radius)
 {
 	object = new Object(renderer);
 	object->loadTexture(texturePath);
@@ -257,27 +311,6 @@ void GravityWell_moving::step(int windowWidth, int windowHeight, long double del
 	object->physicsStep(deltaT);
 	circle->setPos(object->getPosX(), object->getPosY());
 	//std::cout << object->getVel() << std::endl;
-}
-
-
-class LevelController {
-	public:
-		LevelController();
-
-		LTimer gameTime;
-		LTimer deathTime;
-
-		bool stop;
-		bool pause;
-		LTimer dtTimer;
-		float timeSpeed;
-};
-LevelController::LevelController() {
-	gameTime.start();
-
-	stop = false;
-	pause = false;
-	timeSpeed = 1;
 }
 
 #endif
