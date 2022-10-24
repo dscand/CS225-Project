@@ -39,6 +39,12 @@ LButton::LButton()
     mCurrentSprite = BUTTON_SPRITE_MOUSE_OUT;
 }
 
+void LButton::render()
+{
+    //Show current button sprite
+    gButtonSpriteSheetTexture.render( mPosition.x, mPosition.y, &gSpriteClips[ mCurrentSprite ] );
+}
+
 void LButton::setPosition( int x, int y )
 {
     mPosition.x = x;
