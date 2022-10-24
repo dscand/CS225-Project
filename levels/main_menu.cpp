@@ -1,4 +1,4 @@
-namespace _level_1 {
+namespace _level_menu {
 	void init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
