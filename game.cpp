@@ -258,6 +258,7 @@ class GravityWell_moving : public GravityWell {
 		long double calcGravityMag(int posX, int posY) { return calcGravityWellMag(object->getPosX(), object->getPosY(), posX, posY); }
 		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(object->getPosX(), object->getPosY(), posX, posY); }
 		void setVel(long double vel) { object->setVel(vel); }
+		long double getVel() { return object->getVel(); }
 		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 	
 	private:

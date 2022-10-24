@@ -80,12 +80,29 @@ void gameLevelStep(Level* level) {
 	level->dtTimer.start();
 
 	SDL_Event event;
-	while (SDL_PollEvent(&event)) {
+	if (SDL_PollEvent(&event)) {
 		switch (event.type) {
+			// close/X button
 			case SDL_QUIT:
-				// handling of close button
 				level->stop = true;
 				break;
+			case SDL_WINDOWEVENT:
+				switch (event.window.event) {
+					case SDL_WINDOWEVENT_CLOSE:
+						level->stop = true;
+						break;
+					case SDL_WINDOWEVENT_MINIMIZED:
+					case SDL_WINDOWEVENT_FOCUS_LOST:
+						level->pause = true;
+						break;
+					case SDL_WINDOWEVENT_SIZE_CHANGED:
+						level->renderer->setWindow(event.window.data1, event.window.data2);
+						break;
+
+					default:
+						break;
+				}
+
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.scancode) {
 					case SDL_SCANCODE_ESCAPE:
@@ -169,6 +186,8 @@ void gameLevelStep(Level* level) {
 				}
 			}
 		}
+
+		//std::cout << level->gravityWells_moving[0]->getVel() << std::endl;
 
 
 		level->renderer->clear();

@@ -14,14 +14,11 @@
 #include "game.cpp"
 #include "levels.cpp"
 
-const int WINDOW_WIDTH = 840;
-const int WINDOW_HEIGHT = 840;
-
 int WinMain(int argc, char* argv[]) {
 	std::cout << "Starting" << std::endl;
 	srand(time(NULL));
 
-	Renderer renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
+	Renderer renderer(840, 840);
 	renderer.init();
 
 
