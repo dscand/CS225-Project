@@ -26,17 +26,13 @@ namespace _level_1 {
 
 	}
 	int end(Level* level) {
-		int time = level->gameTime.getTicks();
-		level->gameTime.stop();
-		return time;
+		int time = 0;
 	}
 	void close(Level* level) {
 		//delete level->renderer;
 		//level->renderer = nullptr;
 		delete level->background;
 		level->background = nullptr;
-		delete level->player;
-		level->player = nullptr;
 
 		level->gravityWells_stationary.clear();
 		level->gravityWells_moving.clear();
