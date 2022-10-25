@@ -23,7 +23,7 @@ class Level {
 		~Level() { close(); loadedLevels--; }
 		void init(Renderer* renderer) { _init(this, renderer); }
 		void step() { _step(this); }
-		int end() { return _end(this); }
+		void end() { completionTime = _end(this); ended = true; endTimer.start();; std::cout << (double)completionTime / 1000. << " : " << score << std::endl; }
 		void close() { return _close(this); }
 		int getGameWidth() { return gameWidth; }
 		int getGameHeight() { return gameHeight; }
@@ -35,10 +35,11 @@ class Level {
 		std::vector<StarCoin*> starCoins;
 
 		LTimer gameTime;
-		LTimer deathTime;
+		LTimer endTimer;
 
 		bool alive;
 		bool stop;
+		bool ended;
 		bool pause;
 		int score;
 		int scoreGoal;
@@ -166,17 +167,16 @@ void gameLevelStep(Level* level) {
 		}
 		level->player->playerStep(level->getGameWidth(), level->getGameHeight(), deltaT);
 
+		const int endTime = 4000; // ms
 		if (!level->player->isAlive()) {
-			if (!level->deathTime.isStarted()) {
-				level->deathTime.start();
+			if (!level->endTimer.isStarted()) {
 				level->player->explosionIndex = 1;
-				level->completionTime = level->end();
+				level->end();
 			} 
 			else {
 				const int explosionTime = 500; // ms
-				const int deathTime = 4000; // ms
-				int ticks = level->deathTime.getTicks();
-				if (ticks > deathTime) {
+				int ticks = level->endTimer.getTicks();
+				if (ticks > endTime) {
 					level->stop = true;
 				}
 				else if (ticks > 3 * explosionTime) {
@@ -190,17 +190,26 @@ void gameLevelStep(Level* level) {
 				}
 			}
 		}
+		else if (level->ended) {
+			int ticks = level->endTimer.getTicks();
+			if (ticks > endTime) {
+				level->stop = true;
+			}
+		}
 
 
 		// Game Step
-		const int coinRange = 10;
+		const int coinRange = 20;
 		for (StarCoin* coin : level->starCoins) {
 			long double dist = calcDistance(level->player->getPosX(), level->player->getPosY(), coin->getPosX(), coin->getPosY());
 			if (level->player->isAlive() && dist <= coinRange && coin->active) {
 				coin->active = false;
 				level->score++;
 
-				if (level->scoreGoal > 0 && level->score >= level->scoreGoal) level->stop = true;
+				if (level->scoreGoal > 0 && level->score >= level->scoreGoal) {
+					level->end();
+					//level->stop = true;
+				}
 			}
 		}
 
