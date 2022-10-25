@@ -30,7 +30,7 @@ int WinMain(int argc, char* argv[]) {
 	while(i > 0) {
 		std::cout << "Level 1, Start" << std::endl;
 		while(!levelController->level->stop) { levelController->level->step(); }
-		std::cout << (double)levelController->level->completionTime / 1000. << std::endl;
+		std::cout << (double)levelController->level->completionTime / 1000. << " : " << levelController->level->score << std::endl;
 		std::cout << "Level 1, End" << std::endl;
 		levelController->levelRestart();
 		i--;
