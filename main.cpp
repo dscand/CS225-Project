@@ -18,7 +18,7 @@ int WinMain(int argc, char* argv[]) {
 	std::cout << "Starting" << std::endl;
 	srand(time(NULL));
 
-	Renderer renderer(840, 840);
+	Renderer renderer(840, 620);
 	renderer.init();
 
 
@@ -30,7 +30,6 @@ int WinMain(int argc, char* argv[]) {
 	while(i > 0) {
 		std::cout << "Level 1, Start" << std::endl;
 		while(!levelController->level->stop) { levelController->level->step(); }
-		std::cout << (double)levelController->level->completionTime / 1000. << std::endl;
 		std::cout << "Level 1, End" << std::endl;
 		levelController->levelRestart();
 		i--;

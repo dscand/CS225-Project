@@ -314,4 +314,53 @@ void GravityWell_moving::step(long double deltaT = 1.0) {
 	//std::cout << object->getVel() << std::endl;
 }
 
+class StarCoin {
+	public:
+		StarCoin(Renderer*, std::vector<std::string>, long double, int, int, long double, long double, int, int);
+		~StarCoin() { sprites.clear(); }
+		void render(int, int, long double);
+		bool active;
+		int getPosX() { return posX; }
+		int getPosY() { return posY; }
+
+	private:
+		std::vector<Sprite*> sprites;
+		int spriteSel;
+
+		int posX;
+		int posY;
+		long double rotation;
+
+		int xRotOffset;
+		int yRotOffset;
+		long double rotationalOffset;
+};
+StarCoin::StarCoin(Renderer* renderer, std::vector<std::string> texturePaths, long double texScale, int posX, int posY, long double rotation, long double rotationalOffset = 0, int xRotOffset = 0, int yRotOffset = 0) {
+	active = true;
+	
+	for (std::string path : texturePaths) {
+		Sprite* _sprite = new Sprite(renderer);
+		_sprite->loadTexture(path);
+		_sprite->scaleImage(texScale);
+		_sprite->setPos(posX, posY);
+		_sprite->setRot(rotation);
+		sprites.push_back(_sprite);
+	}
+	spriteSel = 0;
+
+	this->posX = posX;
+	this->posY = posY;
+	this->rotation = rotation;
+
+	this->rotationalOffset = rotationalOffset;
+	this->xRotOffset = xRotOffset;
+	this->yRotOffset = yRotOffset;
+}
+void StarCoin::render(int windowOffsetX = 0, int windowOffsetY = 0, long double rotationOffset = 0) {
+	if (active) {
+		sprites.at(spriteSel)->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+		spriteSel = rand() % sprites.size();
+	}
+}
+
 #endif

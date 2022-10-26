@@ -7,10 +7,9 @@
 
 class Level {
 	protected:
-		int id;
+		static int loadedLevels;
 
 	private:
-		static int nextId;
 		std::function<void(Level*, Renderer*)> _init;
 		std::function<int(Level*)> _end;
 		std::function<void(Level*)> _close;
@@ -20,11 +19,11 @@ class Level {
 		int gameHeight;
 		
 	public:
-		Level(int, int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
-		~Level() { close(); }
+		Level(int, int, int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
+		~Level() { close(); loadedLevels--; }
 		void init(Renderer* renderer) { _init(this, renderer); }
 		void step() { _step(this); }
-		int end() { return _end(this); }
+		void end() { completionTime = _end(this); ended = true; endTimer.start();; std::cout << (double)completionTime / 1000. << " : " << score << std::endl; }
 		void close() { return _close(this); }
 		int getGameWidth() { return gameWidth; }
 		int getGameHeight() { return gameHeight; }
@@ -33,22 +32,26 @@ class Level {
 		Player* player;
 		std::vector<GravityWell_stationary*> gravityWells_stationary;
 		std::vector<GravityWell_moving*> gravityWells_moving;
+		std::vector<StarCoin*> starCoins;
 
 		LTimer gameTime;
-		LTimer deathTime;
+		LTimer endTimer;
 
 		bool alive;
 		bool stop;
+		bool ended;
 		bool pause;
+		int score;
+		int scoreGoal;
 		LTimer dtTimer;
 		float timeSpeed;
 
 		int completionTime;
 };
-int Level::nextId = 0;
+int Level::loadedLevels = 0;
 void gameLevelStep(Level*);
 
-Level::Level(int gameWidth, int gameHeight, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
+Level::Level(int gameWidth, int gameHeight, int scoreGoal, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
 	_init = init;
 	_end = end;
 	_close = close;
@@ -60,6 +63,8 @@ Level::Level(int gameWidth, int gameHeight, std::function<void(Level*, Renderer*
 	alive = true;
 	stop = false;
 	pause = false;
+	score = 0;
+	this->scoreGoal = scoreGoal;
 	timeSpeed = 1;
 	completionTime = 0;
 
@@ -68,8 +73,7 @@ Level::Level(int gameWidth, int gameHeight, std::function<void(Level*, Renderer*
 	gravityWells_stationary = {};
 	gravityWells_moving = {};
 
-	id = nextId;
-	nextId++;
+	loadedLevels++;
 }
 
 void gameLevelStep(Level* level) {
@@ -138,6 +142,7 @@ void gameLevelStep(Level* level) {
 		// TODO: Pause Menu
 	}
 	else {
+		// Control Step
 		const Uint8* currentKeyStates = SDL_GetKeyboardState(NULL);
 		if(currentKeyStates[SDL_SCANCODE_UP]) {
 			level->player->boost(1 * deltaT);
@@ -156,23 +161,22 @@ void gameLevelStep(Level* level) {
 		}
 
 
-		// Physics Update
+		// Physics Step
 		for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
 			gravityWell->step(deltaT);
 		}
 		level->player->playerStep(level->getGameWidth(), level->getGameHeight(), deltaT);
 
+		const int endTime = 4000; // ms
 		if (!level->player->isAlive()) {
-			if (!level->deathTime.isStarted()) {
-				level->deathTime.start();
+			if (!level->endTimer.isStarted()) {
 				level->player->explosionIndex = 1;
-				level->completionTime = level->end();
+				level->end();
 			} 
 			else {
 				const int explosionTime = 500; // ms
-				const int deathTime = 4000; // ms
-				int ticks = level->deathTime.getTicks();
-				if (ticks > deathTime) {
+				int ticks = level->endTimer.getTicks();
+				if (ticks > endTime) {
 					level->stop = true;
 				}
 				else if (ticks > 3 * explosionTime) {
@@ -186,10 +190,31 @@ void gameLevelStep(Level* level) {
 				}
 			}
 		}
+		else if (level->ended) {
+			int ticks = level->endTimer.getTicks();
+			if (ticks > endTime) {
+				level->stop = true;
+			}
+		}
 
-		//std::cout << level->gravityWells_moving[0]->getVel() << std::endl;
+
+		// Game Step
+		const int coinRange = 20;
+		for (StarCoin* coin : level->starCoins) {
+			long double dist = calcDistance(level->player->getPosX(), level->player->getPosY(), coin->getPosX(), coin->getPosY());
+			if (level->player->isAlive() && dist <= coinRange && coin->active) {
+				coin->active = false;
+				level->score++;
+
+				if (level->scoreGoal > 0 && level->score >= level->scoreGoal) {
+					level->end();
+					//level->stop = true;
+				}
+			}
+		}
 
 
+		// Rendering Step
 		level->renderer->clear();
 
 		int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->getGameWidth() - level->renderer->getWindowWidth());
@@ -202,6 +227,9 @@ void gameLevelStep(Level* level) {
 		}
 		for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
 			gravityWell->render(centerX, centerY);
+		}
+		for (StarCoin* starCoin : level->starCoins) {
+			starCoin->render(centerX, centerY);
 		}
 		level->player->render(centerX, centerY);
 
@@ -250,10 +278,10 @@ void LevelController::levelRestart() {
 
 #include "levels/level_menu.cpp"
 Level* get_level_menu() {
-	return new Level(2048, 2048, _level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
+	return new Level(2048, 2048, 0, _level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
 }
 
 #include "levels/level_1.cpp"
 Level* get_level_1() {
-	return new Level(2048, 2048, _level_1::init, _level_1::end, _level_1::close);
+	return new Level(2048, 2048, 1, _level_1::init, _level_1::end, _level_1::close);
 }

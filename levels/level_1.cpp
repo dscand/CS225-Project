@@ -70,6 +70,19 @@ namespace _level_1 {
 			level->player->addInfluence(asteroid2);
 			asteroid2->addInfluence(level->gravityWells_stationary[0]);
 		}
+
+		{
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			long double texScale = 2.;
+			int posX = 1200;
+			int posY = 1200;
+			long double rotation = 0;
+			long double rotationalOffset = 0;
+			int xRotOffset = 0;
+			int yRotOffset = 0;
+			StarCoin* starCoin = new StarCoin(level->renderer, texturePath, texScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			level->starCoins.push_back(starCoin);
+		}
 	}
 	int end(Level* level) {
 		int time = level->gameTime.getTicks();
