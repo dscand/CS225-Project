@@ -3,9 +3,12 @@ namespace _level_1 {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
 
+		level->setGameWidth(2048);
+		level->setGameHeight(2048);
+
 		{
 			std::string backgroundTexturePath = "Textures/background1.png";
-			long double imageScale = 2;
+			long double imageScale = (1./1024.)*(long double)level->getGameWidth();
 			level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 		}
 
@@ -45,9 +48,9 @@ namespace _level_1 {
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
-			GravityWell_stationary* asteroid1 = new GravityWell_stationary(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
-			level->gravityWells_stationary.push_back(asteroid1);
-			level->player->addInfluence(asteroid1);
+			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			level->gravityWells_stationary.push_back(object);
+			level->player->addInfluence(object);
 		}
 
 		{
@@ -65,10 +68,10 @@ namespace _level_1 {
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
-			GravityWell_moving* asteroid2 = new GravityWell_moving(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, velocity, rotationalVelocity, rotationalOffset, xRotOffset, yRotOffset);
-			level->gravityWells_moving.push_back(asteroid2);
-			level->player->addInfluence(asteroid2);
-			asteroid2->addInfluence(level->gravityWells_stationary[0]);
+			GravityWell_moving* object = new GravityWell_moving(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, velocity, rotationalVelocity, rotationalOffset, xRotOffset, yRotOffset);
+			level->gravityWells_moving.push_back(object);
+			level->player->addInfluence(object);
+			object->addInfluence(level->gravityWells_stationary[0]);
 		}
 
 		{
@@ -80,8 +83,8 @@ namespace _level_1 {
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
-			StarCoin* starCoin = new StarCoin(level->renderer, texturePath, texScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
-			level->starCoins.push_back(starCoin);
+			StarCoin* object = new StarCoin(level->renderer, texturePath, texScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			level->starCoins.push_back(object);
 		}
 	}
 	int end(Level* level) {

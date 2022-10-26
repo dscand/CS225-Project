@@ -22,18 +22,16 @@ int WinMain(int argc, char* argv[]) {
 	renderer.init();
 
 
-	std::cout << "Level 1, Init" << std::endl;
-	LevelController* levelController = new LevelController(get_level_1);
+	LevelController* levelController = new LevelController(get_level_menu); //get_level_1
 	levelController->levelOpen(&renderer);
 
-	int i = 2;
+	/* int i = 2;
 	while(i > 0) {
-		std::cout << "Level 1, Start" << std::endl;
 		while(!levelController->level->stop) { levelController->level->step(); }
-		std::cout << "Level 1, End" << std::endl;
 		levelController->levelRestart();
 		i--;
-	}
+	} */
+	while(!levelController->level->stop) { levelController->level->step(); }
 
 
 	std::cout << "Exitting" << std::endl;

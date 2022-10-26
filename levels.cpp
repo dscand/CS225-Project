@@ -19,7 +19,7 @@ class Level {
 		int gameHeight;
 		
 	public:
-		Level(int, int, int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
+		Level(int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<void(Level*)>);
 		~Level() { close(); loadedLevels--; }
 		void init(Renderer* renderer) { _init(this, renderer); }
 		void step() { _step(this); }
@@ -27,6 +27,8 @@ class Level {
 		void close() { return _close(this); }
 		int getGameWidth() { return gameWidth; }
 		int getGameHeight() { return gameHeight; }
+		void setGameWidth(int width) { gameWidth = width; }
+		void setGameHeight(int height) { gameHeight = height; }
 		Renderer* renderer;
 		Background* background;
 		Player* player;
@@ -51,14 +53,14 @@ class Level {
 int Level::loadedLevels = 0;
 void gameLevelStep(Level*);
 
-Level::Level(int gameWidth, int gameHeight, int scoreGoal, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
+Level::Level(int scoreGoal, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> close, std::function<void(Level*)> step = gameLevelStep) {
 	_init = init;
 	_end = end;
 	_close = close;
 	_step = step;
 
-	this->gameWidth = gameWidth;
-	this->gameHeight = gameHeight;
+	this->gameWidth = 2048;
+	this->gameHeight = 2048;
 
 	alive = true;
 	stop = false;
@@ -261,15 +263,18 @@ LevelController::LevelController(std::function<Level*()> levelFunction) {
 	this->levelFunction = levelFunction;
 }
 void LevelController::levelOpen(Renderer* renderer) {
-	levelClose();
+	std::cout << "Level, Init" << std::endl;
+	if (level != nullptr) levelClose();
 	level = this->levelFunction();
 	level->init(renderer);
 }
 void LevelController::levelClose() {
+	std::cout << "Level, Close" << std::endl;
 	delete level;
 	level = nullptr;
 }
 void LevelController::levelRestart() {
+	std::cout << "Level, Restart" << std::endl;
 	Renderer* renderer = level->renderer;
 	levelClose();
 	levelOpen(renderer);
@@ -278,10 +283,10 @@ void LevelController::levelRestart() {
 
 #include "levels/level_menu.cpp"
 Level* get_level_menu() {
-	return new Level(2048, 2048, 0, _level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
+	return new Level(0, _level_menu::init, _level_menu::end, _level_menu::close, _level_menu::step);
 }
 
 #include "levels/level_1.cpp"
 Level* get_level_1() {
-	return new Level(2048, 2048, 1, _level_1::init, _level_1::end, _level_1::close);
+	return new Level(1, _level_1::init, _level_1::end, _level_1::close);
 }
