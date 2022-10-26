@@ -269,9 +269,11 @@ void LevelController::levelOpen(Renderer* renderer) {
 	level->init(renderer);
 }
 void LevelController::levelClose() {
-	std::cout << "Level, Close" << std::endl;
-	delete level;
-	level = nullptr;
+	if (level != nullptr) {
+		std::cout << "Level, Close" << std::endl;
+		delete level;
+		level = nullptr;
+	}
 }
 void LevelController::levelRestart() {
 	std::cout << "Level, Restart" << std::endl;

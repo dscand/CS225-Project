@@ -264,7 +264,6 @@ class Object : public Sprite {
 		long double getVelY() { return velY; }
 		long double getVelR() { return velR; }
 		void addInfluence(GravityWell* influence) { influences.push_back(influence); };
-		//void removeInfluence(GravityWell*); // TODO
 
 	private:
 		std::vector<GravityWell*> influences;
