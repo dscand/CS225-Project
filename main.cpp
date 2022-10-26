@@ -22,7 +22,7 @@ int WinMain(int argc, char* argv[]) {
 	renderer.init();
 
 
-	LevelController* levelController = new LevelController(get_level_menu);
+	LevelController* levelController = new LevelController(get_level_menu); //get_level_1
 	levelController->levelOpen(&renderer);
 
 	/* int i = 2;
