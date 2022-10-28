@@ -257,6 +257,7 @@ class LevelController {
 		void levelRestart();
 		int levelEnd();
 		void levelClose();
+		void levelDelete();
 };
 LevelController::LevelController(std::function<Level*()> levelFunction) {
 	level = NULL;
@@ -274,6 +275,10 @@ void LevelController::levelClose() {
 		delete level;
 		level = nullptr;
 	}
+}
+void LevelController::levelDelete() {
+	levelClose();
+	delete this;
 }
 void LevelController::levelRestart() {
 	std::cout << "Level, Restart" << std::endl;
