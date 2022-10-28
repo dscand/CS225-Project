@@ -24,7 +24,7 @@ namespace _level_menu {
 		{
 			long double magnitude = 10;
 			long double radius = 500;
-			std::string texturePath = "Textures/planet1.png";
+			std::string texturePath = "Textures/planet4.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
 			long double circleTexScale = 1./64.;
