@@ -29,8 +29,11 @@ class Level {
 		int getGameHeight() { return gameHeight; }
 		void setGameWidth(int width) { gameWidth = width; }
 		void setGameHeight(int height) { gameHeight = height; }
+
 		Renderer* renderer;
+
 		Background* background;
+		std::vector<Texture*> textures;
 		Player* player;
 		std::vector<GravityWell_stationary*> gravityWells_stationary;
 		std::vector<GravityWell_moving*> gravityWells_moving;
@@ -72,6 +75,7 @@ Level::Level(int scoreGoal, std::function<void(Level*, Renderer*)> init, std::fu
 
 	gameTime.start();
 
+	textures = {};
 	gravityWells_stationary = {};
 	gravityWells_moving = {};
 
@@ -232,6 +236,9 @@ void gameLevelStep(Level* level) {
 		}
 		for (StarCoin* starCoin : level->starCoins) {
 			starCoin->render(centerX, centerY);
+		}
+		for (Texture* texture : level->textures) {
+			texture->render(centerX, centerY);
 		}
 		level->player->render(centerX, centerY);
 
