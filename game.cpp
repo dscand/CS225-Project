@@ -47,7 +47,7 @@ Texture::Texture(Renderer* renderer, std::string texturePath, long double imageS
 	this->rotation = rotation;
 }
 void Texture::render(int windowOffsetX = 0, int windowOffsetY = 0) {
-	texture->render(posX + windowOffsetX, posY + windowOffsetY, rotation;
+	texture->render(posX + windowOffsetX, posY + windowOffsetY, rotation);
 }
 
 
