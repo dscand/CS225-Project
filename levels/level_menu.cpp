@@ -15,7 +15,7 @@ namespace _level_menu {
 		{
 			long double magnitude = 10;
 			long double radius = 500;
-			std::string texturePath = "Textures/planet1.png";
+			std::string texturePath = "Textures/planet4.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
 			long double circleTexScale = 1./64.;
@@ -31,7 +31,7 @@ namespace _level_menu {
 
 	}
 	int end(Level* level) { return 0; }
-	void close(Level* level) {
+	int close(Level* level) {
 		//delete level->renderer;
 		//level->renderer = nullptr;
 		delete level->background;
@@ -40,6 +40,8 @@ namespace _level_menu {
 		level->textures.clear();
 		level->gravityWells_stationary.clear();
 		level->gravityWells_moving.clear();
+
+		return level->nextLevel;
 	}
 	void step(Level* level) {
 		float deltaT = level->dtTimer.getTicks() / 1000.f;
@@ -49,7 +51,7 @@ namespace _level_menu {
 		level->dtTimer.start();
 
 		SDL_Event event;
-		if(SDL_PollEvent(&event)) {
+		while(SDL_PollEvent(&event)) {
 			switch (event.type) {
 				case SDL_QUIT:
 					// handling of close button
@@ -74,6 +76,18 @@ namespace _level_menu {
 
 				case SDL_KEYDOWN:
 					switch (event.key.keysym.scancode) {
+						case SDL_SCANCODE_1:
+							level->nextLevel = 1;
+							level->stop = true;
+							break;
+						case SDL_SCANCODE_2:
+							level->nextLevel = 2;
+							level->stop = true;
+							break;
+						case SDL_SCANCODE_3:
+							level->nextLevel = 3;
+							level->stop = true;
+							break;
 						default:
 							break;
 					}
