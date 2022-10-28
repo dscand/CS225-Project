@@ -26,7 +26,7 @@ void Background::render(int windowOffsetX = 0, int windowOffsetY = 0) {
 
 class Texture {
 	public:
-		Texture(Renderer*, std::string, long double);
+		Texture(Renderer*, std::string, long double, int, int, long double);
 		~Texture() { delete texture; texture = nullptr; }
 		void render(int, int);
 

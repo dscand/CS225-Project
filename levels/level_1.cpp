@@ -87,22 +87,7 @@ namespace _level_1 {
 			level->starCoins.push_back(object);
 		}
 	}
-	int end(Level* level) {
-		int time = level->gameTime.getTicks();
-		level->gameTime.stop();
-		return time;
-	}
-	void close(Level* level) {
-		//delete level->renderer;
-		//level->renderer = nullptr;
-		delete level->background;
-		level->background = nullptr;
-		delete level->player;
-		level->player = nullptr;
-
-		level->textures.clear();
-		level->gravityWells_stationary.clear();
-		level->gravityWells_moving.clear();
-	}
+	//int end(Level* level) {}  use default end
+	//int close(Level* level) {}  use default close
 	//void step(Level*) {}  use default step
 }

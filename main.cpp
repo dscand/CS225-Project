@@ -24,38 +24,37 @@ int WinMain(int argc, char* argv[]) {
 	renderer.init();
 
 
-	LevelController* levelMenuController = new LevelController(get_level_menu);
-	LevelController* level1Controller = new LevelController(get_level_1);
+	std::function<Level*()> levels[] = { get_level_menu, get_level_1 };
+	int levelsLen = 2;
 
-	LevelController* levelController = levelMenuController;
+	LevelController* levelController = new LevelController(levels[0]);
 	levelController->levelOpen(&renderer);
 
 	while(gameRunning) {
 		while(!levelController->level->stop) { levelController->level->step(); }
-		levelController->levelClose();
+		int nextLevel = levelController->levelClose();
 
-		if (levelMenuController != nullptr) {
-			levelController = levelMenuController;
+		std::cout << "NextLevel: " << nextLevel << std::endl;
+
+		if (nextLevel == -1) gameRunning = false;
+		else {
+			levelController->levelClose();
+			delete levelController;
+			//levelController = nullptr;
+
+			if (nextLevel < levelsLen) levelController = new LevelController(levels[nextLevel]);
+			else levelController = new LevelController(levels[0]);
 			levelController->levelOpen(&renderer);
 		}
-		else gameRunning = false;
 	}
 
 
 	std::cout << "Exitting" << std::endl;
 
+
 	levelController->levelClose();
 	delete levelController;
 	levelController = nullptr;
-
-
-	levelMenuController->levelClose();
-	delete levelMenuController;
-	levelMenuController = nullptr;
-	
-	level1Controller->levelClose();
-	delete level1Controller;
-	level1Controller = nullptr;
 
 
 	renderer.close();
