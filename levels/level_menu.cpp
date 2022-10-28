@@ -37,6 +37,7 @@ namespace _level_menu {
 		delete level->background;
 		level->background = nullptr;
 
+		level->textures.clear();
 		level->gravityWells_stationary.clear();
 		level->gravityWells_moving.clear();
 	}

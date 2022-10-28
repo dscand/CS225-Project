@@ -100,6 +100,7 @@ namespace _level_1 {
 		delete level->player;
 		level->player = nullptr;
 
+		level->textures.clear();
 		level->gravityWells_stationary.clear();
 		level->gravityWells_moving.clear();
 	}
