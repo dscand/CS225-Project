@@ -11,6 +11,14 @@ namespace _level_menu {
 			long double imageScale = (1./1024.)*(long double)level->renderer->getWindowWidth();
 			level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 		}
+		{
+			std::string buttonTexturePath = "Textures/Play_Button.png";
+			long double buttonTexScale = (1./96.);
+			int buttonPosX = 1024;
+			int buttonPosY = 1024;
+			long double buttonRotation = 0;
+			level->Texture playButton = new Texture(level->renderer, buttonTexturePath, , buttonPosX, buttonPosY, buttonRotation); level->texture.push_back(playButton);
+		}
 
 		{
 			long double magnitude = 10;
