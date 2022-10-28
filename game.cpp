@@ -23,6 +23,34 @@ void Background::render(int windowOffsetX = 0, int windowOffsetY = 0) {
 	texture->render(windowOffsetX, windowOffsetY);
 }
 
+
+class Texture {
+	public:
+		Texture(Renderer*, std::string, long double);
+		~Texture() { delete texture; texture = nullptr; }
+		void render(int, int);
+
+	private:
+		RTexture* texture;
+
+		int posX;
+		int posY;
+		long double rotation;
+};
+Texture::Texture(Renderer* renderer, std::string texturePath, long double imageScale, int posX, int posY, long double rotation) {
+	texture = new RTexture(renderer);
+	texture->loadTexture(texturePath);
+	texture->scaleImage(imageScale);
+
+	this->posX = posX;
+	this->posY = posY;
+	this->rotation = rotation;
+}
+void Texture::render(int windowOffsetX = 0, int windowOffsetY = 0) {
+	texture->render(posX + windowOffsetX, posY + windowOffsetY, rotation;
+}
+
+
 class Player {
 	public:
 		Player(Renderer*, std::string, std::string, long double, std::vector<std::string>, long double, std::vector<std::string>, std::vector<std::string>, std::vector<std::string>, long double, long double, long double, long double, int, int);
