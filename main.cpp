@@ -18,20 +18,28 @@ int WinMain(int argc, char* argv[]) {
 	std::cout << "Starting" << std::endl;
 	srand(time(NULL));
 
+	bool gameRunning = true;
+
 	Renderer renderer(840, 620);
 	renderer.init();
 
 
-	LevelController* levelController = new LevelController(get_level_menu); //get_level_1
+	LevelController* levelMenuController = new LevelController(get_level_menu);
+	LevelController* level1Controller = new LevelController(get_level_1);
+
+	LevelController* levelController = levelMenuController;
 	levelController->levelOpen(&renderer);
 
-	/* int i = 2;
-	while(i > 0) {
+	while(gameRunning) {
 		while(!levelController->level->stop) { levelController->level->step(); }
-		levelController->levelRestart();
-		i--;
-	} */
-	while(!levelController->level->stop) { levelController->level->step(); }
+		levelController->levelClose();
+
+		if (levelMenuController != nullptr) {
+			levelController = levelMenuController;
+			levelController->levelOpen(&renderer);
+		}
+		else gameRunning = false;
+	}
 
 
 	std::cout << "Exitting" << std::endl;
@@ -39,6 +47,16 @@ int WinMain(int argc, char* argv[]) {
 	levelController->levelClose();
 	delete levelController;
 	levelController = nullptr;
+
+
+	levelMenuController->levelClose();
+	delete levelMenuController;
+	levelMenuController = nullptr;
+	
+	level1Controller->levelClose();
+	delete level1Controller;
+	level1Controller = nullptr;
+
 
 	renderer.close();
 	return 0;
