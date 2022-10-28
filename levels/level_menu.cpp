@@ -17,7 +17,8 @@ namespace _level_menu {
 			int buttonPosX = 1024;
 			int buttonPosY = 1024;
 			long double buttonRotation = 0;
-			level->Texture playButton = new Texture(level->renderer, buttonTexturePath, , buttonPosX, buttonPosY, buttonRotation); level->texture.push_back(playButton);
+			level->Texture playButton = new Texture(level->renderer, buttonTexturePath, , buttonPosX, buttonPosY, buttonRotation); 
+			level->textures.push_back(playButton);
 		}
 
 		{
