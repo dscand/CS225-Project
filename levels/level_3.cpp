@@ -1,10 +1,10 @@
-namespace _level_1 {
+namespace _level_3 {
 	void init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
 
-		level->setGameWidth(1200);
-		level->setGameHeight(1200);
+		level->setGameWidth(2000);
+		level->setGameHeight(2000);
 
 		{
 			std::string backgroundTexturePath = "Textures/background1.png";
@@ -32,36 +32,20 @@ namespace _level_1 {
 
 		//player.setPosX((WINDOW_WIDTH / 2) - player.getOffsetX());
 		//player.setPosY((WINDOW_HEIGHT / 2) - player.getOffsetY());
-		level->player->setPosX(32);
-		level->player->setPosY(32);
+		level->player->setPosX(1200);
+		level->player->setPosY(1000);
+		level->player->setVel(0, 305);
 
 		{
-			long double magnitude = 10;
-			long double radius = 500;
+			long double magnitude = 20;
+			long double radius = 1000;
 			std::string texturePath = "Textures/planet3.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
 			long double circleTexScale = 1./64.;
-			int posX = 500;
-			int posY = 500;
+			int posX = 1000;
+			int posY = 1000;
 			long double rotation = 0;
-			long double rotationalOffset = 0;
-			int xRotOffset = 0;
-			int yRotOffset = 0;
-			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
-			level->gravityWells_stationary.push_back(object);
-			level->player->addInfluence(object);
-		}
-		{
-			long double magnitude = 5;
-			long double radius = 300;
-			std::string texturePath = "Textures/asteroid1.png";
-			std::string circleTexturePath = "Textures/Aura_of_Influence_10%.png";
-			long double texScale = 1.;
-			long double circleTexScale = 1./64.;
-			int posX = 900;
-			int posY = 900;
-			long double rotation = 52;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
@@ -71,10 +55,51 @@ namespace _level_1 {
 		}
 
 		{
+			long double magnitude = 20;
+			long double radius = 200;
+			std::string texturePath = "Textures/planet_black.png";
+			std::string circleTexturePath = "Textures/Aura_of_Influence_50%.png";
+			long double texScale = 1;
+			long double circleTexScale = 1./64.; // will scale by radius
+			int posX = 1000;
+			int posY = 250;
+			long double rotation = -90;
+			long double velocity = 90;
+			long double rotationalVelocity = 100;
+			long double rotationalOffset = 0;
+			int xRotOffset = 0;
+			int yRotOffset = 0;
+			GravityWell_moving* object = new GravityWell_moving(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, velocity, rotationalVelocity, rotationalOffset, xRotOffset, yRotOffset);
+			level->gravityWells_moving.push_back(object);
+			level->player->addInfluence(object);
+			object->addInfluence(level->gravityWells_stationary[0]);
+		}
+		{
+			long double magnitude = -20;
+			long double radius = 200;
+			std::string texturePath = "Textures/planet_white.png";
+			std::string circleTexturePath = "Textures/Aura_of_Influence_50%.png";
+			long double texScale = 1;
+			long double circleTexScale = 1./64.; // will scale by radius
+			int posX = 1000;
+			int posY = 1750;
+			long double rotation = -90;
+			long double velocity = 110;
+			long double rotationalVelocity = 100;
+			long double rotationalOffset = 0;
+			int xRotOffset = 0;
+			int yRotOffset = 0;
+			GravityWell_moving* object = new GravityWell_moving(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, velocity, rotationalVelocity, rotationalOffset, xRotOffset, yRotOffset);
+			level->gravityWells_moving.push_back(object);
+			level->player->addInfluence(object);
+			object->addInfluence(level->gravityWells_stationary[0]);
+		}
+
+		{
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
-			int posX = 300;
-			int posY = 300;
+			int posX = 1200;
+			int posY = 1000;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
@@ -85,8 +110,8 @@ namespace _level_1 {
 		{
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
-			int posX = 300;
-			int posY = 700;
+			int posX = 1000;
+			int posY = 1200;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
@@ -97,8 +122,8 @@ namespace _level_1 {
 		{
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
-			int posX = 700;
-			int posY = 300;
+			int posX = 1000;
+			int posY = 800;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
@@ -110,7 +135,7 @@ namespace _level_1 {
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
 			int posX = 800;
-			int posY = 800;
+			int posY = 1000;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;

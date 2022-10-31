@@ -11,14 +11,27 @@ namespace _level_menu {
 			long double imageScale = (1./1024.)*(long double)level->renderer->getWindowWidth();
 			level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 		}
+
+		// Play, Exit
 		{
+			// Play
 			std::string buttonTexturePath = "Textures/Play_Button.png";
-			long double buttonTexScale = (1./96.);
-			int buttonPosX = 1024;
-			int buttonPosY = 1024;
+			long double buttonTexScale = 2.;
+			int buttonPosX = 420;
+			int buttonPosY = 210;
 			long double buttonRotation = 0;
-			level->Texture playButton = new Texture(level->renderer, buttonTexturePath, , buttonPosX, buttonPosY, buttonRotation); 
-			level->textures.push_back(playButton);
+			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation); 
+			level->textures.push_back(button);
+		}
+		{
+			// Exit
+			std::string buttonTexturePath = "Textures/Exit_Button.png";
+			long double buttonTexScale = 2.;
+			int buttonPosX = 420;
+			int buttonPosY = 310;
+			long double buttonRotation = 0;
+			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation); 
+			level->textures.push_back(button);
 		}
 
 		{
@@ -27,7 +40,7 @@ namespace _level_menu {
 			std::string texturePath = "Textures/planet4.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
-			long double circleTexScale = 1./64.;
+			long double circleTexScale = 0.;
 			int posX = level->renderer->getWindowWidth()*0.5;
 			int posY = level->renderer->getWindowHeight()*0.7;
 			long double rotation = 0;
@@ -40,18 +53,7 @@ namespace _level_menu {
 
 	}
 	int end(Level* level) { return 0; }
-	int close(Level* level) {
-		//delete level->renderer;
-		//level->renderer = nullptr;
-		delete level->background;
-		level->background = nullptr;
-
-		level->textures.clear();
-		level->gravityWells_stationary.clear();
-		level->gravityWells_moving.clear();
-
-		return level->nextLevel;
-	}
+	#include "../menu.cpp"
 	void step(Level* level) {
 		float deltaT = level->dtTimer.getTicks() / 1000.f;
 		if(level->timeSpeed != 1) {
@@ -85,6 +87,10 @@ namespace _level_menu {
 
 				case SDL_KEYDOWN:
 					switch (event.key.keysym.scancode) {
+						case SDL_SCANCODE_ESCAPE:
+							level->nextLevel = -1;
+							level->stop = true;
+							break;
 						case SDL_SCANCODE_1:
 							level->nextLevel = 1;
 							level->stop = true;
@@ -102,16 +108,31 @@ namespace _level_menu {
 					}
 
 				case SDL_MOUSEMOTION:
-					//int x, y;
-					//SDL_GetMouseState( &x, &y );
+					for (Texture* texture : level->textures) {
+						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
+							// TODO: mouse hover function
+							break;
+						}
+						else {
+							// TODO: mouse not hover function
+						}
+					}
 					break;
 				case SDL_MOUSEBUTTONDOWN:
-					//int x, y;
-					//SDL_GetMouseState( &x, &y );
+					for (Texture* texture : level->textures) {
+						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
+							// TODO: mouse button down function
+							break;
+						}
+					}
 					break;
 				case SDL_MOUSEBUTTONUP:
-					//int x, y;
-					//SDL_GetMouseState( &x, &y );
+					for (Texture* texture : level->textures) {
+						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
+							// TODO: mouse button up function
+							break;
+						}
+					}
 					break;
 				
 				default:
@@ -120,22 +141,27 @@ namespace _level_menu {
 		}
 
 
-
 		// Physics Update
 		for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
 			gravityWell->step(deltaT);
 		}
 
-		level->renderer->clear();
-
 
 		// Render Update
+		level->renderer->clear();
+
 		level->background->render(0, 0);
 		for (GravityWell_stationary* gravityWell : level->gravityWells_stationary) {
 				gravityWell->render(0, 0);
 		}
 		for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
 				gravityWell->render(0, 0);
+		}
+		for (StarCoin* starCoin : level->starCoins) {
+			starCoin->render(0, 0);
+		}
+		for (Texture* texture : level->textures) {
+			texture->render(0, 0);
 		}
 
 		level->renderer->update();

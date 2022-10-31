@@ -35,7 +35,7 @@ void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
 	}
-	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN); //SDL_WINDOW_RESIZABLE
+	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 }
@@ -256,6 +256,7 @@ class Object : public Sprite {
 		void addVelX(long double magnitude) { this->velX += magnitude; }
 		void addVelY(long double magnitude) { this->velY += magnitude; }
 		void setVel(long double);
+		void setVel(long double velX, long double velY) { setVelX(velX); setVelY(velY); }
 		void setVelX(long double velX) { this->velX = velX; }
 		void setVelY(long double velY) { this->velY = velY; }
 		void setVelR(long double velR) { this->velR = velR; }
@@ -284,13 +285,10 @@ void Object::physicsStep(long double deltaT = 1.0) {
 	//Influences
 	for (GravityWell* influence : influences) {
 		long double magnitude = influence->calcGravityMag(getPosX(), getPosY());
+		long double direction = influence->calcGravityRot(getPosX(), getPosY());
 
-		if (magnitude > 0) {
-			long double direction = influence->calcGravityRot(getPosX(), getPosY());
-
-			velX += sin(degrees2radians(direction)) * magnitude * deltaT;
-			velY += -cos(degrees2radians(direction)) * magnitude * deltaT;
-		}
+		velX += sin(degrees2radians(direction)) * magnitude * deltaT;
+		velY += -cos(degrees2radians(direction)) * magnitude * deltaT;
 	}
 
 	const int max = 1000;

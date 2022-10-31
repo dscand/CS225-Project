@@ -29,16 +29,20 @@ class Texture {
 		Texture(Renderer*, std::string, long double, int, int, long double);
 		~Texture() { delete texture; texture = nullptr; }
 		void render(int, int);
+		int getPosX() { return posX; }
+		int getPosY() { return posY; }
+		int getWidth() { return texture->getWidth(); }
+		int getHeight() { return texture->getHeight(); }
 
 	private:
-		RTexture* texture;
+		Sprite* texture;
 
 		int posX;
 		int posY;
 		long double rotation;
 };
 Texture::Texture(Renderer* renderer, std::string texturePath, long double imageScale, int posX, int posY, long double rotation) {
-	texture = new RTexture(renderer);
+	texture = new Sprite(renderer);
 	texture->loadTexture(texturePath);
 	texture->scaleImage(imageScale);
 
@@ -67,6 +71,7 @@ class Player {
 		long double getOffsetX() { return object->getWidth() / 2; }
 		long double getOffsetY() { return object->getHeight() / 2; }
 		long double getVel() { return object->getVel(); }
+		void setVel(long double velX, long double velY) { object->setVel(velX, velY); }
 		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 		bool isAlive() { return alive; }
 		int explosionIndex;
@@ -236,6 +241,8 @@ class GravityWell_stationary : public GravityWell {
 		void render(int, int, long double);
 		long double calcGravityMag(int posX, int posY) { return calcGravityWellMag(this->posX, this->posY, posX, posY); }
 		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(this->posX, this->posY, posX, posY); }
+		int getPosX() { return sprite->getPosX(); }
+		int getPosY() { return sprite->getPosY(); }
 
 	private:
 		Sprite* sprite;
@@ -287,6 +294,8 @@ class GravityWell_moving : public GravityWell {
 		long double calcGravityRot(int posX, int posY) { return calcGravityWellRot(object->getPosX(), object->getPosY(), posX, posY); }
 		void setVel(long double vel) { object->setVel(vel); }
 		long double getVel() { return object->getVel(); }
+		int getPosX() { return object->getPosX(); }
+		int getPosY() { return object->getPosY(); }
 		void addInfluence(GravityWell* influence) { object->addInfluence(influence); }
 	
 	private:
@@ -339,6 +348,7 @@ void GravityWell_moving::render(int windowOffsetX = 0, int windowOffsetY = 0, lo
 void GravityWell_moving::step(long double deltaT = 1.0) {
 	object->physicsStep(deltaT);
 	circle->setPos(object->getPosX(), object->getPosY());
+	circle->setRot(object->getRot());
 	//std::cout << object->getVel() << std::endl;
 }
 

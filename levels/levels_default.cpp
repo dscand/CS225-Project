@@ -115,6 +115,7 @@ namespace _level_default {
 			const int endTime = 4000; // ms
 			if (!level->player->isAlive()) {
 				if (!level->endTimer.isStarted()) {
+					level->nextLevel = 0;
 					level->player->explosionIndex = 1;
 					level->end();
 				} 
@@ -164,6 +165,8 @@ namespace _level_default {
 
 			int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->getGameWidth() - level->renderer->getWindowWidth());
 			int centerY = level->renderer->centerYCal(level->player->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->getGameHeight() - level->renderer->getWindowHeight());
+			//centerX = level->renderer->centerXCal(level->gravityWells_stationary[0]->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->getGameWidth() - level->renderer->getWindowWidth());
+			//centerY = level->renderer->centerYCal(level->gravityWells_stationary[0]->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->getGameHeight() - level->renderer->getWindowHeight());
 
 			// Render Update
 			level->background->render(centerX, centerY);
