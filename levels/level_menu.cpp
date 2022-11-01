@@ -112,21 +112,15 @@ namespace _level_menu {
 						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
 							/* 
 							switch to a slightly lighter texture to indicate the hovering action. 
-							have a bool set true for hover that will be called in the botton up function.
 							*/
 							break;
 						}
-						else {
-							//don't hover, have a bool set to false for mouse button  up to read in
-						}
-					}
 					break;
 				case SDL_MOUSEBUTTONUP:
 					for (Texture* texture : level->textures) {
 						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
-							/*
-							if bool set in mouse motion is true, and the mousde over is true, switch levels
-							*/
+							//activate button press. switch to level 1.
+				
 							break;
 						}
 					}
