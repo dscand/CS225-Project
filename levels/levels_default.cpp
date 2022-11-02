@@ -189,7 +189,7 @@ namespace _level_default {
 			level->player->render(centerX, centerY);
 
 			for (Texture* texture : level->textures) {
-				texture->render(centerX, centerY);
+				texture->render(0, 0);
 			}
 
 			level->renderer->update();

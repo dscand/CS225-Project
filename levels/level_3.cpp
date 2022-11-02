@@ -97,7 +97,7 @@ namespace _level_3 {
 		{
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
-			int posX = 1200;
+			int posX = 1400;
 			int posY = 1000;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
@@ -110,7 +110,7 @@ namespace _level_3 {
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
 			int posX = 1000;
-			int posY = 1200;
+			int posY = 1400;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
@@ -122,7 +122,7 @@ namespace _level_3 {
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
 			int posX = 1000;
-			int posY = 800;
+			int posY = 600;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
@@ -133,7 +133,7 @@ namespace _level_3 {
 		{
 			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
 			long double texScale = 2.;
-			int posX = 800;
+			int posX = 600;
 			int posY = 1000;
 			long double rotation = 0;
 			long double rotationalOffset = 0;
