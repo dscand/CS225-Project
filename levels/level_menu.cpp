@@ -17,7 +17,7 @@ namespace _level_menu {
 		{
 			// Play
 			std::string buttonTexturePath = "Textures/Play_Button.png";
-			std::string buttonTexturePath_hover = "Textures/Exit_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Play_Button_Lighten.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 210;
@@ -31,7 +31,7 @@ namespace _level_menu {
 		{
 			// Exit
 			std::string buttonTexturePath = "Textures/Exit_Button.png";
-			std::string buttonTexturePath_hover = "Textures/Play_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Exit_Button_Lighten.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 310;
@@ -46,6 +46,7 @@ namespace _level_menu {
 		{
 			long double magnitude = 10;
 			long double radius = 500;
+			long double collisionRadius = 50;
 			std::string texturePath = "Textures/planet4.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
@@ -56,7 +57,7 @@ namespace _level_menu {
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
-			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
 			level->gravityWells_stationary.push_back(object);
 		}
 

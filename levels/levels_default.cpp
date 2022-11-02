@@ -8,7 +8,7 @@ namespace _level_default {
 		{
 			// Restart
 			std::string buttonTexturePath = "Textures/Play_Button.png";
-			std::string buttonTexturePath_hover = "Textures/Exit_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Play_Button_Lighten.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 210;
@@ -23,7 +23,7 @@ namespace _level_default {
 		{
 			// Exit
 			std::string buttonTexturePath = "Textures/Exit_Button.png";
-			std::string buttonTexturePath_hover = "Textures/Play_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Exit_Button_Lighten.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 310;
@@ -100,7 +100,7 @@ namespace _level_default {
 							level->pause = !level->pause;
 							for (int buttonIndex : buttonIndexes) {
 								level->textures[buttonIndex]->draw = level->pause;
-								level->textures[buttonIndex + 1]->draw = level->pause;
+								if (!level->pause) level->textures[buttonIndex + 1]->draw = level->pause;
 							}
 							break;
 						case SDL_SCANCODE_1:
@@ -218,12 +218,23 @@ namespace _level_default {
 			for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
 				gravityWell->step(deltaT);
 			}
-			level->player->playerStep(level->getGameWidth(), level->getGameHeight(), deltaT);
+			level->player->playerStep(deltaT);
 
+			// Collision
+			level->player->wallCollision(level->getGameWidth(), level->getGameHeight());
+			for (GravityWell_stationary* gravityWell : level->gravityWells_stationary) {
+				level->player->objectCollision(gravityWell);
+			}
+			for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
+				level->player->objectCollision(gravityWell);
+			}
+
+
+			// Game Step
 			const int endTime = 4000; // ms
 			if (!level->player->isAlive()) {
 				if (!level->endTimer.isStarted()) {
-					level->nextLevel = 0;
+					level->nextLevel = -2;
 					level->player->explosionIndex = 1;
 					level->end();
 				} 
@@ -251,8 +262,6 @@ namespace _level_default {
 				}
 			}
 
-
-			// Game Step
 			const int coinRange = 20;
 			for (StarCoin* coin : level->starCoins) {
 				long double dist = calcDistance(level->player->getPosX(), level->player->getPosY(), coin->getPosX(), coin->getPosY());

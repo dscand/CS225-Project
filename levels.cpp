@@ -151,5 +151,5 @@ Level* get_level_2() {
 
 #include "levels/level_3.cpp"
 Level* get_level_3() {
-	return new Level(5, 4, _level_3::init);
+	return new Level(4, 4, _level_3::init);
 }

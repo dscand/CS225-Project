@@ -37,7 +37,8 @@ namespace _level_1 {
 		{
 			long double magnitude = 10;
 			long double radius = 500;
-			std::string texturePath = "Textures/planet3.png";
+			long double collisionRadius = 90;
+			std::string texturePath = "Textures/planet1.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
 			long double circleTexScale = 1./64.;
@@ -47,13 +48,14 @@ namespace _level_1 {
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
-			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
 			level->gravityWells_stationary.push_back(object);
 			level->player->addInfluence(object);
 		}
 		{
 			long double magnitude = 5;
 			long double radius = 300;
+			long double collisionRadius = 50;
 			std::string texturePath = "Textures/asteroid1.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_10%.png";
 			long double texScale = 1.;
@@ -64,7 +66,7 @@ namespace _level_1 {
 			long double rotationalOffset = 0;
 			int xRotOffset = 0;
 			int yRotOffset = 0;
-			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
 			level->gravityWells_stationary.push_back(object);
 			level->player->addInfluence(object);
 		}

@@ -11,7 +11,7 @@ long double calcDistance(long double pos1X, long double pos1Y, long double pos2X
 	return sqrt(((pos2X - pos1X) * (pos2X - pos1X)) + ((pos2Y - pos1Y) * (pos2Y - pos1Y)));
 }
 long double calcDirection(long double pos1X, long double pos1Y, long double pos2X, long double pos2Y) {
-	return radians2degrees(atan2(pos1Y-pos2Y, pos1X-pos2X))+90;
+	return radians2degrees(atan2(pos1Y-pos2Y, pos1X-pos2X)) + 90;
 }
 
 // LTimer class from lazyfoo.net
