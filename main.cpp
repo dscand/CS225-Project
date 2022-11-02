@@ -10,6 +10,7 @@
 //#include "include/SDL_timer.h"
 
 #include "helpers.cpp"
+#include "menu.cpp"
 //#include "renderer.cpp"
 #include "game.cpp"
 #include "levels.cpp"
@@ -24,8 +25,8 @@ int WinMain(int argc, char* argv[]) {
 	renderer.init();
 
 
-	std::function<Level*()> levels[] = { get_level_menu, get_level_1 };
-	int levelsLen = 2;
+	std::function<Level*()> levels[] = { get_level_menu, get_level_1, get_level_2, get_level_3 };
+	int levelsLen = 4;
 
 	LevelController* levelController = new LevelController(levels[0]);
 	levelController->levelOpen(&renderer);
@@ -37,6 +38,7 @@ int WinMain(int argc, char* argv[]) {
 		std::cout << "NextLevel: " << nextLevel << std::endl;
 
 		if (nextLevel == -1) gameRunning = false;
+		else if (nextLevel == -2) levelController->levelRestart(&renderer);
 		else {
 			levelController->levelClose();
 			delete levelController;

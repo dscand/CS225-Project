@@ -99,7 +99,7 @@ class LevelController {
 
 		Level* level;
 		void levelOpen(Renderer* renderer);
-		void levelRestart();
+		void levelRestart(Renderer* renderer);
 		int levelEnd();
 		int levelClose();
 		void levelDelete();
@@ -113,6 +113,7 @@ void LevelController::levelOpen(Renderer* renderer) {
 	if (level != nullptr) levelClose();
 	level = this->levelFunction();
 	level->init(renderer);
+	std::cout << level->scoreGoal << " stars" << std::endl;
 }
 int LevelController::levelClose() {
 	if (level != nullptr) {
@@ -126,9 +127,8 @@ int LevelController::levelClose() {
 	}
 	else return 0;
 }
-void LevelController::levelRestart() {
+void LevelController::levelRestart(Renderer* renderer) {
 	std::cout << "Level, Restart" << std::endl;
-	Renderer* renderer = level->renderer;
 	levelClose();
 	levelOpen(renderer);
 }
@@ -141,5 +141,15 @@ Level* get_level_menu() {
 
 #include "levels/level_1.cpp"
 Level* get_level_1() {
-	return new Level(1, 0, _level_1::init);
+	return new Level(4, 2, _level_1::init);
+}
+
+#include "levels/level_2.cpp"
+Level* get_level_2() {
+	return new Level(1, 3, _level_2::init);
+}
+
+#include "levels/level_3.cpp"
+Level* get_level_3() {
+	return new Level(4, 4, _level_3::init);
 }

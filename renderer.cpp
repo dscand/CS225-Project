@@ -35,7 +35,7 @@ void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
 	}
-	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN); //SDL_WINDOW_RESIZABLE
+	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 }
@@ -98,8 +98,6 @@ class RTexture {
 
 		int getWidth() { return width; }
 		int getHeight() { return height; }
-		
-
 
 	private:
 		Renderer* renderer;
@@ -237,7 +235,6 @@ long double GravityWell::calcGravityWellMag(int pos1X, int pos1Y, int pos2X, int
 	long double distance = calcDistance(pos1X, pos1Y, pos2X, pos2Y);
 	if (distance < radius) {
 		distance /= 1000;
-		//std::cout << magnitude/(distance*distance) << std::endl;
 		return magnitude/(distance*distance);
 	}
 	else {
@@ -252,10 +249,13 @@ class Object : public Sprite {
 	public:
 		Object(Renderer*);
 		void physicsStep(long double);
+		bool boxCollision(int, int, int, int);
+		bool circleCollision(int, int, long double);
 		void addVel(long double);
 		void addVelX(long double magnitude) { this->velX += magnitude; }
 		void addVelY(long double magnitude) { this->velY += magnitude; }
 		void setVel(long double);
+		void setVel(long double velX, long double velY) { setVelX(velX); setVelY(velY); }
 		void setVelX(long double velX) { this->velX = velX; }
 		void setVelY(long double velY) { this->velY = velY; }
 		void setVelR(long double velR) { this->velR = velR; }
@@ -263,7 +263,7 @@ class Object : public Sprite {
 		long double getVelX() { return velX; }
 		long double getVelY() { return velY; }
 		long double getVelR() { return velR; }
-		void addInfluence(GravityWell* influence) { influences.push_back(influence); };
+		void addInfluence(GravityWell* influence) { influences.push_back(influence); }
 
 	private:
 		std::vector<GravityWell*> influences;
@@ -284,13 +284,10 @@ void Object::physicsStep(long double deltaT = 1.0) {
 	//Influences
 	for (GravityWell* influence : influences) {
 		long double magnitude = influence->calcGravityMag(getPosX(), getPosY());
+		long double direction = influence->calcGravityRot(getPosX(), getPosY());
 
-		if (magnitude > 0) {
-			long double direction = influence->calcGravityRot(getPosX(), getPosY());
-
-			velX += sin(degrees2radians(direction)) * magnitude * deltaT;
-			velY += -cos(degrees2radians(direction)) * magnitude * deltaT;
-		}
+		velX += sin(degrees2radians(direction)) * magnitude * deltaT;
+		velY += -cos(degrees2radians(direction)) * magnitude * deltaT;
 	}
 
 	const int max = 1000;
@@ -305,6 +302,55 @@ void Object::physicsStep(long double deltaT = 1.0) {
 	if (velR != 0.0) {
 		rotate(velR * deltaT);
 	}
+}
+bool Object::boxCollision(int x1, int y1, int x2, int y2) {
+	// Top Left and Bottom Right Corner
+	bool hit = false;
+
+	// right boundary
+	if (getPosX() > x2) {
+		setPosX((2 * x2) - getPosX());
+		setVelX(-getVelX());
+		hit = true;
+	}
+
+	// left boundary
+	if (getPosX() < x1) {
+		setPosX((2 * x1) - getPosX());
+		setVelX(-getVelX());
+		hit = true;
+	}
+
+	// bottom boundary
+	if (getPosY() > y2) {
+		setPosY((2 * y2) - getPosY());
+		setVelY(-getVelY());
+		hit = true;
+	}
+
+	// upper boundary
+	if (getPosY() < y1) {
+		setPosY((2 * y1) - getPosY());
+		setVelY(-getVelY());
+		hit = true;
+	}
+
+	return hit;
+}
+bool Object::circleCollision(int x, int y, long double r) {
+	// Top Left and Bottom Right Corner
+	bool hit = false;
+
+	long double distance = calcDistance(getPosX(), getPosY(), x, y);
+	if (distance <= r) {
+		// TODO
+		//long double direction = calcDirection(getPosX(), getPosY(), x, y);
+		//long double parallelVel = cos(degrees2radians(direction)) * getVel();
+		//std::cout << direction << std::endl;
+		hit = true;
+	}
+
+	return hit;
 }
 void Object::addVel(long double magnitude) {
 	long double xVel = sin(degrees2radians(getRot())) * magnitude;
