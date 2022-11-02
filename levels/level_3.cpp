@@ -1,7 +1,6 @@
 namespace _level_3 {
 	void init(Level* level, Renderer* renderer) {
-		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
-		level->renderer = renderer;
+		_level_default::init(level, renderer);
 
 		level->setGameWidth(2000);
 		level->setGameHeight(2000);

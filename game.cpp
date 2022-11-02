@@ -26,6 +26,7 @@ void Background::render(int windowOffsetX = 0, int windowOffsetY = 0) {
 
 class Texture {
 	public:
+		bool draw;
 		Texture(Renderer*, std::string, long double, int, int, long double);
 		~Texture() { delete texture; texture = nullptr; }
 		void render(int, int);
@@ -42,6 +43,7 @@ class Texture {
 		long double rotation;
 };
 Texture::Texture(Renderer* renderer, std::string texturePath, long double imageScale, int posX, int posY, long double rotation) {
+	draw = true;
 	texture = new Sprite(renderer);
 	texture->loadTexture(texturePath);
 	texture->scaleImage(imageScale);
@@ -51,7 +53,7 @@ Texture::Texture(Renderer* renderer, std::string texturePath, long double imageS
 	this->rotation = rotation;
 }
 void Texture::render(int windowOffsetX = 0, int windowOffsetY = 0) {
-	texture->render(posX + windowOffsetX, posY + windowOffsetY, rotation);
+	if (draw) texture->render(posX + windowOffsetX, posY + windowOffsetY, rotation);
 }
 
 

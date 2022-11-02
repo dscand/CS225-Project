@@ -1,4 +1,42 @@
 namespace _level_default {
+	const int buttonIndexes[] = {0,2};
+	void init(Level* level, Renderer* renderer) {
+		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
+		level->renderer = renderer;
+
+		// Restart, Exit
+		{
+			// Restart
+			std::string buttonTexturePath = "Textures/Play_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Exit_Button.png";
+			long double buttonTexScale = 2.;
+			int buttonPosX = 420;
+			int buttonPosY = 210;
+			long double buttonRotation = 0;
+			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			Texture* button_hover = new Texture(level->renderer, buttonTexturePath_hover, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			button->draw = false;
+			button_hover->draw = false;
+			level->textures.push_back(button);
+			level->textures.push_back(button_hover);
+		}
+		{
+			// Exit
+			std::string buttonTexturePath = "Textures/Exit_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Play_Button.png";
+			long double buttonTexScale = 2.;
+			int buttonPosX = 420;
+			int buttonPosY = 310;
+			long double buttonRotation = 0;
+			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			Texture* button_hover = new Texture(level->renderer, buttonTexturePath_hover, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			button->draw = false;
+			button_hover->draw = false;
+			level->textures.push_back(button);
+			level->textures.push_back(button_hover);
+		}
+	}
+
 	int end(Level* level) {
 		int time = level->gameTime.getTicks();
 		level->gameTime.stop();
@@ -43,6 +81,10 @@ namespace _level_default {
 						case SDL_WINDOWEVENT_MINIMIZED:
 						case SDL_WINDOWEVENT_FOCUS_LOST:
 							level->pause = true;
+							for (int buttonIndex : buttonIndexes) {
+								level->textures[buttonIndex]->draw = false;
+								level->textures[buttonIndex + 1]->draw = false;
+							}
 							break;
 						case SDL_WINDOWEVENT_SIZE_CHANGED:
 							level->renderer->setWindow(event.window.data1, event.window.data2);
@@ -56,6 +98,10 @@ namespace _level_default {
 					switch (event.key.keysym.scancode) {
 						case SDL_SCANCODE_ESCAPE:
 							level->pause = !level->pause;
+							for (int buttonIndex : buttonIndexes) {
+								level->textures[buttonIndex]->draw = level->pause;
+								level->textures[buttonIndex + 1]->draw = level->pause;
+							}
 							break;
 						case SDL_SCANCODE_1:
 						case SDL_SCANCODE_KP_1:
@@ -77,6 +123,43 @@ namespace _level_default {
 						default:
 							break;
 					}
+					break;
+
+				case SDL_MOUSEMOTION:
+					if (level->pause) {
+						for (int buttonIndex : buttonIndexes) {
+							bool mouseOver = MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight());
+							level->textures[buttonIndex]->draw = !mouseOver;
+							level->textures[buttonIndex + 1]->draw = mouseOver;
+						}
+					}
+					break;
+				case SDL_MOUSEBUTTONUP:
+					if (level->pause) {
+						for (int buttonIndex : buttonIndexes) {
+							if (MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight())) {
+								switch (buttonIndex) {
+									case 0:
+										// Restart
+										level->nextLevel = -2;
+										level->stop = true;
+										break;
+
+									case 2:
+										// Exit
+										level->nextLevel = 0;
+										level->stop = true;
+										break;
+
+									default:
+										std::cout << "ERROR: No button function" << std::endl;
+										break;
+								}
+								break;
+							}
+						}
+					}
+					break;
 					
 				default:
 					break;
@@ -84,7 +167,32 @@ namespace _level_default {
 		}
 
 		if (level->pause) {
-			// TODO: Pause Menu
+			// Rendering Step
+			level->renderer->clear();
+
+			int centerX = level->renderer->centerXCal(level->player->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->getGameWidth() - level->renderer->getWindowWidth());
+			int centerY = level->renderer->centerYCal(level->player->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->getGameHeight() - level->renderer->getWindowHeight());
+			//centerX = level->renderer->centerXCal(level->gravityWells_stationary[0]->getPosX(), (level->renderer->getWindowWidth() / 2) + level->player->getOffsetX(), level->getGameWidth() - level->renderer->getWindowWidth());
+			//centerY = level->renderer->centerYCal(level->gravityWells_stationary[0]->getPosY(), (level->renderer->getWindowHeight() / 2) + level->player->getOffsetY(), level->getGameHeight() - level->renderer->getWindowHeight());
+
+			// Render Update
+			level->background->render(centerX, centerY);
+			for (GravityWell_stationary* gravityWell : level->gravityWells_stationary) {
+				gravityWell->render(centerX, centerY);
+			}
+			for (GravityWell_moving* gravityWell : level->gravityWells_moving) {
+				gravityWell->render(centerX, centerY);
+			}
+			for (StarCoin* starCoin : level->starCoins) {
+				starCoin->render(centerX, centerY);
+			}
+			level->player->render(centerX, centerY);
+
+			for (Texture* texture : level->textures) {
+				texture->render(centerX, centerY);
+			}
+
+			level->renderer->update();
 		}
 		else {
 			// Control Step
@@ -154,7 +262,6 @@ namespace _level_default {
 
 					if (level->scoreGoal > 0 && level->score >= level->scoreGoal) {
 						level->end();
-						//level->stop = true;
 					}
 				}
 			}

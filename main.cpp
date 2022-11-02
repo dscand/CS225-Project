@@ -10,6 +10,7 @@
 //#include "include/SDL_timer.h"
 
 #include "helpers.cpp"
+#include "menu.cpp"
 //#include "renderer.cpp"
 #include "game.cpp"
 #include "levels.cpp"
@@ -37,6 +38,7 @@ int WinMain(int argc, char* argv[]) {
 		std::cout << "NextLevel: " << nextLevel << std::endl;
 
 		if (nextLevel == -1) gameRunning = false;
+		else if (nextLevel == -2) levelController->levelRestart(&renderer);
 		else {
 			levelController->levelClose();
 			delete levelController;

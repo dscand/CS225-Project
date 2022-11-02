@@ -99,7 +99,7 @@ class LevelController {
 
 		Level* level;
 		void levelOpen(Renderer* renderer);
-		void levelRestart();
+		void levelRestart(Renderer* renderer);
 		int levelEnd();
 		int levelClose();
 		void levelDelete();
@@ -127,9 +127,8 @@ int LevelController::levelClose() {
 	}
 	else return 0;
 }
-void LevelController::levelRestart() {
+void LevelController::levelRestart(Renderer* renderer) {
 	std::cout << "Level, Restart" << std::endl;
-	Renderer* renderer = level->renderer;
 	levelClose();
 	levelOpen(renderer);
 }
@@ -152,5 +151,5 @@ Level* get_level_2() {
 
 #include "levels/level_3.cpp"
 Level* get_level_3() {
-	return new Level(1, 4, _level_3::init);
+	return new Level(5, 4, _level_3::init);
 }

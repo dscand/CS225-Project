@@ -1,4 +1,5 @@
 namespace _level_menu {
+	const int buttonIndexes[] = {0,2};
 	void init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
@@ -16,22 +17,30 @@ namespace _level_menu {
 		{
 			// Play
 			std::string buttonTexturePath = "Textures/Play_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Exit_Button.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 210;
 			long double buttonRotation = 0;
-			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation); 
+			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			Texture* button_hover = new Texture(level->renderer, buttonTexturePath_hover, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			button_hover->draw = false;
 			level->textures.push_back(button);
+			level->textures.push_back(button_hover);
 		}
 		{
 			// Exit
 			std::string buttonTexturePath = "Textures/Exit_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Play_Button.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 310;
 			long double buttonRotation = 0;
-			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation); 
+			Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			Texture* button_hover = new Texture(level->renderer, buttonTexturePath_hover, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
+			button_hover->draw = false;
 			level->textures.push_back(button);
+			level->textures.push_back(button_hover);
 		}
 
 		{
@@ -53,7 +62,6 @@ namespace _level_menu {
 
 	}
 	int end(Level* level) { return 0; }
-	#include "../menu.cpp"
 	void step(Level* level) {
 		float deltaT = level->dtTimer.getTicks() / 1000.f;
 		if(level->timeSpeed != 1) {
@@ -84,6 +92,7 @@ namespace _level_menu {
 						default:
 							break;
 					}
+					break;
 
 				case SDL_KEYDOWN:
 					switch (event.key.keysym.scancode) {
@@ -106,27 +115,38 @@ namespace _level_menu {
 						default:
 							break;
 					}
+					break;
 
 				case SDL_MOUSEMOTION:
-					for (Texture* texture : level->textures) {
-						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
-							/* 
-							switch to a slightly lighter texture to indicate the hovering action. 
-							*/
-							break;
-						}
+					for (int buttonIndex : buttonIndexes) {
+						bool mouseOver = MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight());
+						level->textures[buttonIndex]->draw = !mouseOver;
+						level->textures[buttonIndex + 1]->draw = mouseOver;
+					}
 					break;
 				case SDL_MOUSEBUTTONUP:
-					for (Texture* texture : level->textures) {
-						if (MouseFunctions::mouseOver(texture->getPosX(), texture->getPosY(), texture->getWidth(), texture->getHeight())) {
-							//activate button press. switch to level 1.
-				
+					for (int buttonIndex : buttonIndexes) {
+						if (MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight())) {
+							switch (buttonIndex) {
+								case 0:
+									// Play
+									level->nextLevel = 1;
+									level->stop = true;
+									break;
+
+								case 2:
+									// Exit
+									level->nextLevel = -1;
+									level->stop = true;
+									break;
+
+								default:
+									std::cout << "ERROR: No button function" << std::endl;
+									break;
+							}
 							break;
 						}
 					}
-					break;
-				
-				default:
 					break;
 			}
 		}

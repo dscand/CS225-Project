@@ -98,8 +98,6 @@ class RTexture {
 
 		int getWidth() { return width; }
 		int getHeight() { return height; }
-		
-
 
 	private:
 		Renderer* renderer;
