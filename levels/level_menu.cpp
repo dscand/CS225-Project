@@ -60,6 +60,24 @@ namespace _level_menu {
 			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
 			level->gravityWells_stationary.push_back(object);
 		}
+		
+		{
+			long double magnitude = 10;
+			long double radius = 500;
+			long double collisionRadius = 50;
+			std::string texturePath = "Textures/planet4.png";
+			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
+			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
+			long double circleTexScale = 0.;
+			int posX = level->renderer->getWindowWidth()*0.2;
+			int posY = level->renderer->getWindowHeight()*0.4;
+			long double rotation = 0;
+			long double rotationalOffset = 0;
+			int xRotOffset = 0;
+			int yRotOffset = 0;
+			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+			level->gravityWells_stationary.push_back(object);
+		}
 
 	}
 	int end(Level* level) { return 0; }
