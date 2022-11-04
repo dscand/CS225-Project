@@ -3,6 +3,7 @@
 #include "include/SDL_image.h"
 #include "include/SDL_mixer.h"
 
+
 class Renderer {
 	private:
 		SDL_Window* win;
@@ -24,6 +25,8 @@ class Renderer {
 		void renderRTexture(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, long double angle, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE) { SDL_RenderCopyEx(rend, texture, srcrect, dstrect, angle, center, flip); }
 		int centerXCal(int, int, int);
 		int centerYCal(int, int, int);
+		Mix_Music * gMusic;
+		std::vector<Mix_Chunk*> gSound;
 };
 Renderer::Renderer(int windowWidth, int windowHeight) {
 	this->windowWidth = windowWidth;
@@ -31,6 +34,19 @@ Renderer::Renderer(int windowWidth, int windowHeight) {
 
 	win = nullptr;
 	rend = nullptr;
+	
+	gMusic = nullptr;
+}
+void music_init(Renderer* renderer){
+	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
+                {
+                    printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+                }
+	// replace wav file with actual sound file.
+	//gMusic = Mix_LoadMUS( "21_sound_effects_and_music/beat.wav" );
+	//Derek will tell me exactly how to do the line below.
+	//Mix_load WAV("fileLocation/fileName.wav"); renderer->mix_Chunk.push_back(Mix_Load WAV);
+	
 }
 void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
