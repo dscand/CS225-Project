@@ -42,7 +42,6 @@ void music_init(Renderer* renderer){
 		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
 	}
 	
-	// replace wav file with actual sound file.
 	//renderer->gMusic = Mix_LoadMUS( "21_sound_effects_and_music/beat.wav" );
 	
 	//renderer->gSound.push_back(Mix_LoadWAV("fileLocation/fileName.wav"));
