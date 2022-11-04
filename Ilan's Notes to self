@@ -106,4 +106,10 @@ after, do sound design after the code compiles and runs with a sample texture.
 
 Start Presentation
 
-make sure project meets project requirements
+make sure project meets project requirements:
+ exceptions
+ a UML diagram
+ Submit a style guide and made sure to follow it with all your submitted code. 
+ 10-15 minutes long.  Presentations will take place during class time.  Correctly use C++ 
+vocabulary words during your presentation (ex. virtual function, abstract base class, 
+overloading, overriding, scope resolution operator).  
