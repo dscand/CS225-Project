@@ -6,7 +6,7 @@ namespace _level_2 {
 		level->setGameHeight(1400);
 
 		{
-			std::string backgroundTexturePath = "Textures/background1.png";
+			std::string backgroundTexturePath = "Textures/background2.png";
 			long double imageScale = (1./1024.)*(long double)level->getGameWidth();
 			level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 		}
@@ -38,7 +38,7 @@ namespace _level_2 {
 			long double magnitude = 10;
 			long double radius = 400;
 			long double collisionRadius = 50;
-			std::string texturePath = "Textures/planet3.png";
+			std::string texturePath = "Textures/planet2.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
 			long double circleTexScale = 1./64.;
@@ -56,7 +56,7 @@ namespace _level_2 {
 			long double magnitude = 10;
 			long double radius = 400;
 			long double collisionRadius = 50;
-			std::string texturePath = "Textures/planet3.png";
+			std::string texturePath = "Textures/planet2.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
 			long double circleTexScale = 1./64.;
@@ -74,7 +74,7 @@ namespace _level_2 {
 			long double magnitude = 10;
 			long double radius = 400;
 			long double collisionRadius = 50;
-			std::string texturePath = "Textures/planet3.png";
+			std::string texturePath = "Textures/planet2.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
 			long double circleTexScale = 1./64.;
@@ -92,7 +92,7 @@ namespace _level_2 {
 			long double magnitude = 10;
 			long double radius = 400;
 			long double collisionRadius = 50;
-			std::string texturePath = "Textures/planet3.png";
+			std::string texturePath = "Textures/planet2.png";
 			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 			long double texScale = 2.;
 			long double circleTexScale = 1./64.;
@@ -108,7 +108,7 @@ namespace _level_2 {
 		}
 
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_2.png", "Textures/star_coin_2_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 700;
 			int posY = 700;
