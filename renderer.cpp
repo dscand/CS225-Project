@@ -1,6 +1,7 @@
 #include <iostream>
 #include "include/SDL.h"
 #include "include/SDL_image.h"
+#include "include/SDL_mixer.h"
 
 class Renderer {
 	private:
