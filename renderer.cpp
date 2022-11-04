@@ -38,14 +38,14 @@ Renderer::Renderer(int windowWidth, int windowHeight) {
 	gMusic = nullptr;
 }
 void music_init(Renderer* renderer){
-	if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 )
-                {
-                    printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
-                }
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+	}
+	
 	// replace wav file with actual sound file.
-	//gMusic = Mix_LoadMUS( "21_sound_effects_and_music/beat.wav" );
-	//Derek will tell me exactly how to do the line below.
-	//Mix_load WAV("fileLocation/fileName.wav"); renderer->mix_Chunk.push_back(Mix_Load WAV);
+	//renderer->gMusic = Mix_LoadMUS( "21_sound_effects_and_music/beat.wav" );
+	
+	//renderer->gSound.push_back(Mix_LoadWAV("fileLocation/fileName.wav"));
 	
 }
 void Renderer::init() {
