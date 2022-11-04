@@ -72,7 +72,7 @@ namespace _level_1 {
 		}
 
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 300;
 			int posY = 300;
@@ -84,7 +84,7 @@ namespace _level_1 {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 300;
 			int posY = 700;
@@ -96,7 +96,7 @@ namespace _level_1 {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 700;
 			int posY = 300;
@@ -108,7 +108,7 @@ namespace _level_1 {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 800;
 			int posY = 800;
