@@ -61,6 +61,7 @@ namespace _level_menu {
 			level->gravityWells_stationary.push_back(object);
 		}
 		
+		//added a broken ship to the title screen. Thought it would look cool.
 		{
 			long double magnitude = 1;
 			long double radius = 50;
