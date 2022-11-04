@@ -66,8 +66,8 @@ namespace _level_menu {
 			long double radius = 50;
 			long double collisionRadius = 5;
 			std::string texturePath = "Textures/brokenShip.png";
-			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
-			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
+			std::string circleTexturePath = "Textures/Aura_of_Influence_10%.png";
+			long double texScale = (1./64.)*(long double)level->renderer->getWindowWidth()*0.25;
 			long double circleTexScale = 0.;
 			int posX = level->renderer->getWindowWidth()*0.2;
 			int posY = level->renderer->getWindowHeight()*0.4;
