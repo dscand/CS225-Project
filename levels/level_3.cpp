@@ -7,7 +7,7 @@ void _level_3::init(Level* level, Renderer* renderer) {
 		level->setGameHeight(2000);
 
 		{
-			std::string backgroundTexturePath = "Textures/background1.png";
+			std::string backgroundTexturePath = "Textures/background3.png";
 			long double imageScale = (1./1024.)*(long double)level->getGameWidth();
 			level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 		}
@@ -99,7 +99,7 @@ void _level_3::init(Level* level, Renderer* renderer) {
 		}
 
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_3.png", "Textures/star_coin_3_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 1400;
 			int posY = 1000;
@@ -111,7 +111,7 @@ void _level_3::init(Level* level, Renderer* renderer) {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_3.png", "Textures/star_coin_3_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 1000;
 			int posY = 1400;
@@ -123,7 +123,7 @@ void _level_3::init(Level* level, Renderer* renderer) {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_3.png", "Textures/star_coin_3_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 1000;
 			int posY = 600;
@@ -135,7 +135,7 @@ void _level_3::init(Level* level, Renderer* renderer) {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_3.png", "Textures/star_coin_3_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 600;
 			int posY = 1000;
@@ -146,4 +146,4 @@ void _level_3::init(Level* level, Renderer* renderer) {
 			StarCoin* object = new StarCoin(level->renderer, texturePath, texScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
 			level->starCoins.push_back(object);
 		}
-}
+	}
