@@ -1,6 +1,6 @@
-namespace _level_default {
-	const int buttonIndexes[] = {0,2};
-	void init(Level* level, Renderer* renderer) {
+#include "levels_default.hpp"
+
+void _level_default::init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
 
@@ -37,13 +37,13 @@ namespace _level_default {
 		}
 	}
 
-	int end(Level* level) {
+	int _level_default::end(Level* level) {
 		int time = level->gameTime.getTicks();
 		level->gameTime.stop();
 		return time;
 	}
 
-	int close(Level* level) {
+	int _level_default::close(Level* level) {
 		//delete level->renderer;
 		//level->renderer = nullptr;
 		delete level->background;
@@ -59,7 +59,7 @@ namespace _level_default {
 		return level->nextLevel;
 	}
 
-	void step(Level* level) {
+	void _level_default::step(Level* level) {
 		float deltaT = level->dtTimer.getTicks() / 1000.f;
 		if(level->timeSpeed != 1) {
 			deltaT /= level->timeSpeed;
@@ -307,4 +307,3 @@ namespace _level_default {
 		// calculates to 60 fps
 		SDL_Delay(1000 / 60);
 	}
-}

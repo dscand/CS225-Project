@@ -1,4 +1,4 @@
-#include "include/SDL_timer.h"
+#include "helpers.hpp"
 
 long double radians2degrees(long double radians) {
 	return radians * (180.0/M_PI);
@@ -14,36 +14,7 @@ long double calcDirection(long double pos1X, long double pos1Y, long double pos2
 	return radians2degrees(atan2(pos1Y-pos2Y, pos1X-pos2X)) + 90;
 }
 
-// LTimer class from lazyfoo.net
-class LTimer {
-	public:
-		//Initializes variables
-		LTimer();
 
-		//The various clock actions
-		void start();
-		void stop();
-		void pause();
-		void unpause();
-
-		//Gets the timer's time
-		int getTicks();
-
-		//Checks the status of the timer
-		bool isStarted();
-		bool isPaused();
-
-	private:
-		//The clock time when the timer started
-		int mStartTicks;
-
-		//The ticks stored when the timer was paused
-		int mPausedTicks;
-
-		//The timer status
-		bool mPaused;
-		bool mStarted;
-};
 LTimer::LTimer()
 {
 	//Initialize the variables

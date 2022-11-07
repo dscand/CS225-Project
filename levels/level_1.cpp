@@ -1,5 +1,6 @@
-namespace _level_1 {
-	void init(Level* level, Renderer* renderer) {
+#include "level_1.hpp"
+
+void _level_1::init(Level* level, Renderer* renderer) {
 		_level_default::init(level, renderer);
 
 		level->setGameWidth(1200);
@@ -120,7 +121,3 @@ namespace _level_1 {
 			level->starCoins.push_back(object);
 		}
 	}
-	//int end(Level* level) {}  use default end
-	//int close(Level* level) {}  use default close
-	//void step(Level*) {}  use default step
-}

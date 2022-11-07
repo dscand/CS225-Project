@@ -1,5 +1,3 @@
-// g++ -std=c++17 main.cpp -I"include" -L"lib" -Wall -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -o Game
-
 #include <iostream>
 #include <math.h>
 #include <time.h>
@@ -7,13 +5,36 @@
 
 #include "include/SDL.h"
 #include "include/SDL_image.h"
-//#include "include/SDL_timer.h"
+#include "include/SDL_mixer.h"
+#include "include/SDL_timer.h"
 
-#include "helpers.cpp"
-#include "menu.cpp"
-//#include "renderer.cpp"
-#include "game.cpp"
-#include "levels.cpp"
+#include "helpers.hpp"
+#include "menu.hpp"
+#include "renderer.hpp"
+#include "game.hpp"
+#include "levels.hpp"
+
+
+#include "levels/levels_default.hpp"
+#include "levels/level_menu.hpp"
+#include "levels/level_1.hpp"
+#include "levels/level_2.hpp"
+#include "levels/level_3.hpp"
+
+Level* get_level_menu() {
+	return new Level(0, -1, _level_menu::init, _level_menu::end, _level_menu::step, _level_default::close);
+}
+
+Level* get_level_1() {
+	return new Level(4, 2, _level_1::init, _level_default::end, _level_default::step, _level_default::close);
+}
+Level* get_level_2() {
+	return new Level(1, 3, _level_2::init, _level_default::end, _level_default::step, _level_default::close);
+}
+Level* get_level_3() {
+	return new Level(4, 4, _level_3::init, _level_default::end, _level_default::step, _level_default::close);
+}
+
 
 int WinMain(int argc, char* argv[]) {
 	std::cout << "Starting" << std::endl;

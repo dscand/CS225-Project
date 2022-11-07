@@ -1,5 +1,6 @@
-namespace _level_2 {
-	void init(Level* level, Renderer* renderer) {
+#include "level_2.hpp"
+
+void _level_2::init(Level* level, Renderer* renderer) {
 		_level_default::init(level, renderer);
 		
 		level->setGameWidth(1400);
@@ -119,8 +120,4 @@ namespace _level_2 {
 			StarCoin* object = new StarCoin(level->renderer, texturePath, texScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
 			level->starCoins.push_back(object);
 		}
-	}
-	//int end(Level* level) {}  use default end
-	//int close(Level* level) {}  use default close
-	//void step(Level*) {}  use default step
 }
