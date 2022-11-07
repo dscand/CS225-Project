@@ -73,7 +73,7 @@ void _level_1::init(Level* level, Renderer* renderer) {
 		}
 
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 300;
 			int posY = 300;
@@ -85,7 +85,7 @@ void _level_1::init(Level* level, Renderer* renderer) {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 300;
 			int posY = 700;
@@ -97,7 +97,7 @@ void _level_1::init(Level* level, Renderer* renderer) {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 700;
 			int posY = 300;
@@ -109,7 +109,7 @@ void _level_1::init(Level* level, Renderer* renderer) {
 			level->starCoins.push_back(object);
 		}
 		{
-			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_2.png"};
+			std::vector<std::string> texturePath = {"Textures/star_coin_1.png", "Textures/star_coin_1_sparkle.png"};
 			long double texScale = 2.;
 			int posX = 800;
 			int posY = 800;
