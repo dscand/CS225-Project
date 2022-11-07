@@ -7,6 +7,16 @@ Renderer::Renderer(int windowWidth, int windowHeight) {
 	win = nullptr;
 	rend = nullptr;
 }
+void music_init(Renderer* renderer){
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+	}
+	
+	//renderer->gMusic = Mix_LoadMUS( "21_sound_effects_and_music/beat.wav" );
+	
+	//renderer->gSound.push_back(Mix_LoadWAV("fileLocation/fileName.wav"));
+	
+}
 void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
