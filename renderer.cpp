@@ -12,7 +12,7 @@ void music_init(Renderer* renderer){
 		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
 	}
 	
-	//renderer->gMusic = Mix_LoadMUS( "21_sound_effects_and_music/beat.wav" );
+	//renderer->gMusic = Mix_LoadMUS( "Sounds/beat.wav" );
 	
 	//renderer->gSound.push_back(Mix_LoadWAV("fileLocation/fileName.wav"));
 	
