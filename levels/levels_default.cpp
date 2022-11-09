@@ -7,8 +7,8 @@ void _level_default::init(Level* level, Renderer* renderer) {
 		// Restart, Exit
 		{
 			// Restart
-			std::string buttonTexturePath = "Textures/Play_Button.png";
-			std::string buttonTexturePath_hover = "Textures/Play_Button_Lighten.png";
+			std::string buttonTexturePath = "Textures/Reset_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Reset_Button_Lighten.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 210;

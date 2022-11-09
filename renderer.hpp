@@ -6,6 +6,7 @@
 
 #include "include/SDL.h"
 #include "include/SDL_image.h"
+#include "include/SDL_mixer.h"
 
 #include "helpers.hpp"
 

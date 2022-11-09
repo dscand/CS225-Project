@@ -44,41 +44,32 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 	}
 
 	{
-			long double magnitude = 10;
-			long double radius = 500;
-			long double collisionRadius = 50;
-			std::string texturePath = "Textures/planet4.png";
-			std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
-			long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
-			long double circleTexScale = 0.;
-			int posX = level->renderer->getWindowWidth()*0.5;
-			int posY = level->renderer->getWindowHeight()*0.7;
-			long double rotation = 0;
-			long double rotationalOffset = 0;
-			int xRotOffset = 0;
-			int yRotOffset = 0;
-			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
-			level->gravityWells_stationary.push_back(object);
-		}
+		long double magnitude = 10;
+		long double radius = 500;
+		long double collisionRadius = 50;
+		std::string texturePath = "Textures/planet4.png";
+		std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
+		long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
+		long double circleTexScale = 0.;
+		int posX = level->renderer->getWindowWidth()*0.5;
+		int posY = level->renderer->getWindowHeight()*0.7;
+		long double rotation = 0;
+		long double rotationalOffset = 0;
+		int xRotOffset = 0;
+		int yRotOffset = 0;
+		GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
+		level->gravityWells_stationary.push_back(object);
+	}
 		
-		//added a broken ship to the title screen. Thought it would look cool.
-		{
-			long double magnitude = 1;
-			long double radius = 50;
-			long double collisionRadius = 5;
-			std::string texturePath = "Textures/brokenShip.png";
-			std::string circleTexturePath = "Textures/Aura_of_Influence_10%.png";
-			long double texScale = (1./64.)*(long double)level->renderer->getWindowWidth()*0.25;
-			long double circleTexScale = 0.;
-			int posX = level->renderer->getWindowWidth()*0.2;
-			int posY = level->renderer->getWindowHeight()*0.4;
-			long double rotation = 0;
-			long double rotationalOffset = 0;
-			int xRotOffset = 0;
-			int yRotOffset = 0;
-			GravityWell_stationary* object = new GravityWell_stationary(magnitude, radius, collisionRadius, level->renderer, texturePath, circleTexturePath, texScale, circleTexScale, posX, posY, rotation, rotationalOffset, xRotOffset, yRotOffset);
-			level->gravityWells_stationary.push_back(object);
-		}
+	{
+		std::string texturePath = "Textures/brokenShip.png";
+		long double texScale = (1./64.)*(long double)level->renderer->getWindowWidth()*0.25;
+		int posX = level->renderer->getWindowWidth()*0.2;
+		int posY = level->renderer->getWindowHeight()*0.4;
+		long double rotation = 0;
+		Texture* ship = new Texture(level->renderer, texturePath, texScale, posX, posY, rotation);
+		level->textures.push_back(ship);
+	}
 }
 int _level_menu::end(Level* level) { return 0; }
 void _level_menu::step(Level* level) {
