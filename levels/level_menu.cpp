@@ -19,8 +19,8 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 		std::string buttonTexturePath = "Textures/Play_Button.png";
 		std::string buttonTexturePath_hover = "Textures/Play_Button_Lighten.png";
 		long double buttonTexScale = 2.;
-		int buttonPosX = 420;
-		int buttonPosY = 210;
+		int buttonPosX = level->renderer->getWindowWidth()*0.5;
+		int buttonPosY = level->renderer->getWindowHeight()*0.65;
 		long double buttonRotation = 0;
 		Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
 		Texture* button_hover = new Texture(level->renderer, buttonTexturePath_hover, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
@@ -33,8 +33,8 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 		std::string buttonTexturePath = "Textures/Exit_Button.png";
 		std::string buttonTexturePath_hover = "Textures/Exit_Button_Lighten.png";
 		long double buttonTexScale = 2.;
-		int buttonPosX = 420;
-		int buttonPosY = 310;
+		int buttonPosX = level->renderer->getWindowWidth()*0.5;
+		int buttonPosY = level->renderer->getWindowHeight()*0.8;
 		long double buttonRotation = 0;
 		Texture* button = new Texture(level->renderer, buttonTexturePath, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
 		Texture* button_hover = new Texture(level->renderer, buttonTexturePath_hover, buttonTexScale, buttonPosX, buttonPosY, buttonRotation);
@@ -51,7 +51,7 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 		std::string circleTexturePath = "Textures/Aura_of_Influence_25%.png";
 		long double texScale = (1./126.)*(long double)level->renderer->getWindowWidth()*0.25;
 		long double circleTexScale = 0.;
-		int posX = level->renderer->getWindowWidth()*0.5;
+		int posX = level->renderer->getWindowWidth()*0.75;
 		int posY = level->renderer->getWindowHeight()*0.7;
 		long double rotation = 0;
 		long double rotationalOffset = 0;
@@ -66,6 +66,16 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 		long double texScale = (1./64.)*(long double)level->renderer->getWindowWidth()*0.25;
 		int posX = level->renderer->getWindowWidth()*0.2;
 		int posY = level->renderer->getWindowHeight()*0.4;
+		long double rotation = 0;
+		Texture* ship = new Texture(level->renderer, texturePath, texScale, posX, posY, rotation);
+		level->textures.push_back(ship);
+	}
+
+	{
+		std::string texturePath = "Textures/Title.png";
+		long double texScale = (1./64.)*(long double)level->renderer->getWindowWidth()*0.25;
+		int posX = level->renderer->getWindowWidth()*0.5;
+		int posY = level->renderer->getWindowHeight()*0.2;
 		long double rotation = 0;
 		Texture* ship = new Texture(level->renderer, texturePath, texScale, posX, posY, rotation);
 		level->textures.push_back(ship);
