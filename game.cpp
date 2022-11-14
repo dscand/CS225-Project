@@ -179,8 +179,10 @@ Player::Player(Renderer* renderer, std::string shipTexturePath, std::string ship
 void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOffset) {
 	if (alive)
 		object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
-	else if (explosionIndex == 0)
+	else if (explosionIndex == 0){
+		Mix_PlayChannel( -1, gSound[2], 0 );
 		spriteBroken->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+	}
 
 	if (boosting && alive) {
 		spriteFlame.at(flameSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
@@ -188,7 +190,6 @@ void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOf
 	}
 	else if (!alive) {
 		if (explosionIndex == 1) {
-			Mix_PlayChannel( -1, gSound[2], 0 );
 			spriteExplosion1.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
 			explosionSel = rand() % spriteExplosion1.size();
 		}
