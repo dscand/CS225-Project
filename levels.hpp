@@ -35,6 +35,8 @@ class Level {
 		void setGameWidth(int width) { gameWidth = width; }
 		void setGameHeight(int height) { gameHeight = height; }
 
+		friend std::ostream& operator<<(std::ostream& os, const Level& level);
+
 		Renderer* renderer;
 
 		Background* background;

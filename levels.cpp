@@ -71,3 +71,7 @@ void LevelController::levelRestart(Renderer* renderer) {
 	levelClose();
 	levelOpen(renderer);
 }
+std::ostream& operator<<(std::ostream& os, const Level& level) {
+    os << level.levelID << ": " << level.score << "/" << level.scoreGoal;
+    return os;
+}
