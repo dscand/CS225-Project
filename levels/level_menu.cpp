@@ -150,7 +150,7 @@ void _level_menu::step(Level* level) {
 						switch (buttonIndex) {
 							case 0:
 								// Play Button Sound effect
-								Mix_PlayChannel(-1, level->renderer->gSound[0], 0);
+								Mix_PlayChannel(0, level->renderer->gSound[0], 0);
 								// Play
 								level->nextLevel = 1;
 								level->stop = true;
@@ -158,7 +158,7 @@ void _level_menu::step(Level* level) {
 
 							case 2:
 								// Play Button Sound effect
-								Mix_PlayChannel(-1, level->renderer->gSound[0], 0);
+								Mix_PlayChannel(0, level->renderer->gSound[0], 0);
 								// Exit
 								level->nextLevel = -1;
 								level->stop = true;
