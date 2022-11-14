@@ -274,6 +274,7 @@ void _level_default::init(Level* level, Renderer* renderer) {
 				if (level->player->isAlive() && dist <= coinRange && coin->active) {
 					coin->active = false;
 					level->score++;
+					Mix_PlayChannel(0, level->renderer->gSound[0], 0);
 
 					if (level->scoreGoal > 0 && level->score >= level->scoreGoal) {
 						level->end();
