@@ -12,10 +12,21 @@ void music_init(Renderer* renderer){
 		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
 	}
 	
-	renderer->gMusic.push_back(Mix_LoadMUS( "Sounds/terminal_theme.wav"));
-	renderer->gMusic.push_back(Mix_LoadMUS( "Sounds/terminal_in_game_theme.wav"));
+	// Mix_LoadMUS 1
+	renderer->gMusic.push_back(Mix_LoadMUS("Sounds/terminal_theme_intro.wav"));
+	// Mix_LoadMUS 2
+	renderer->gMusic.push_back(Mix_LoadMUS("Sounds/terminal_theme.wav"));
+	// Mix_LoadMUS 3
+	renderer->gMusic.push_back(Mix_LoadMUS("Sounds/terminal_in_game_theme.wav"));
 	
-	//renderer->gSound.push_back(Mix_LoadWAV("fileLocation/fileName.wav"));
+	//Mix_LoadWAV 1
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/coin_effect.wav"));
+	//Mix_LoadWAV 2
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/crash_effect.wav"));
+	//Mix_LoadWAV 3
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/gravity_effect.wav"));
+	//Mix_LoadWAV 4
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/rocket_effect(2).wav"));
 	
 }
 void Renderer::init() {
