@@ -202,6 +202,12 @@ void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOf
 	}
 	
 }
+void Player::boost(long double multiplier) {
+	if (alive) object->addVel(speed * multiplier);
+	boosting = true;
+
+	if (!Mix_Playing(2)) Mix_PlayChannel(2, object->renderer->gSound[2], 0);
+}
 void Player::playerStep(long double deltaT = 1.0) {
 	object->physicsStep(deltaT);
 	spriteBroken->setPos(object->getPosX(), object->getPosY());
