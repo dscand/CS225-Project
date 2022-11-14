@@ -149,12 +149,16 @@ void _level_menu::step(Level* level) {
 					if (MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight())) {
 						switch (buttonIndex) {
 							case 0:
+								// Play Sound effect
+								
 								// Play
 								level->nextLevel = 1;
 								level->stop = true;
 								break;
 
 							case 2:
+								// Play Sound effect
+								
 								// Exit
 								level->nextLevel = -1;
 								level->stop = true;
