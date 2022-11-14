@@ -188,8 +188,9 @@ void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOf
 	}
 	else if (!alive) {
 		if (explosionIndex == 1) {
+			Mix_PlayChannel( -1, gSound[2], 0 );
 			spriteExplosion1.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
-			explosionSel = rand() % spriteExplosion2.size();
+			explosionSel = rand() % spriteExplosion1.size();
 		}
 		else if (explosionIndex == 2) {
 			spriteExplosion2.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
