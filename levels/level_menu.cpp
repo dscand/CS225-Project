@@ -8,7 +8,7 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 	level->setGameHeight(level->renderer->getWindowHeight());
 	
 	Mix_PlayMusic(level->renderer->gMusic[0], 0);
-        Mix_PlayMusic(level->renderer->gMusic[1], -1);
+	Mix_PlayMusic(level->renderer->gMusic[1], -1);
 
 	{
 		std::string backgroundTexturePath = "Textures/background4.png";

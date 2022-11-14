@@ -93,6 +93,9 @@ int WinMain(int argc, char* argv[]) {
 
 	std::cout << "Exitting" << std::endl;
 
+	Mix_HaltMusic();
+	Mix_HaltChannel(-1);
+
 	levelController->levelClose();
 	delete levelController;
 	levelController = nullptr;

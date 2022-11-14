@@ -4,6 +4,8 @@ void _level_default::init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
 
+		Mix_HaltMusic();
+
 		// Restart, Exit
 		{
 			// Restart
