@@ -49,6 +49,8 @@ void LevelController::levelOpen(Renderer* renderer) {
 	std::cout << "Level, Init" << std::endl;
 	if (level != nullptr) levelClose();
 	level = this->levelFunction();
+	if (level == nullptr || level == NULL) throw std::string("levelFunction Failed, ") + SDL_GetError();
+	
 	level->init(renderer);
 	std::cout << level->scoreGoal << " stars" << std::endl;
 }

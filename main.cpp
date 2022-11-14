@@ -67,7 +67,27 @@ int WinMain(int argc, char* argv[]) {
 
 			if (nextLevel < levelsLen) levelController = new LevelController(levels[nextLevel]);
 			else levelController = new LevelController(levels[0]);
-			levelController->levelOpen(&renderer);
+			try {
+				levelController->levelOpen(&renderer);
+			}
+			catch (char const* msg) {
+				std::cout << "Level Controller Error, " << msg << std::endl;
+				levelController->level->stop = true;
+				gameRunning = false;
+				break;
+			}
+			catch (std::string msg) {
+				std::cout << "Level Controller Error, " << msg << std::endl;
+				levelController->level->stop = true;
+				gameRunning = false;
+				break;
+			}
+			catch (...) {
+				std::cout << "Level Controller UNKNOWN Error" << std::endl;
+				levelController->level->stop = true;
+				gameRunning = false;
+				break;
+			}
 		}
 	}
 

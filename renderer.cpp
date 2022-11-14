@@ -25,6 +25,7 @@ void Renderer::init() {
 	
 	const std::string iconPath = "Textures/Icon.png";
 	SDL_Surface* icon = IMG_Load(iconPath.c_str()); // 16x16
+	if (icon == NULL) throw std::string("IMG_Load Failed, ") + SDL_GetError();
 	SDL_SetWindowIcon(win, icon);
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
@@ -81,6 +82,7 @@ RTexture::RTexture(Renderer* renderer) {
 }
 bool RTexture::loadTexture(std::string path) {
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (loadedSurface == NULL) throw std::string("IMG_Load Failed, ") + SDL_GetError();
 
 	//SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0, 0));
 
