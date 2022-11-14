@@ -2,7 +2,7 @@
 
 int Level::loadedLevels = 0;
 
-Level::Level(int scoreGoal, int nextLevel, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> step, std::function<int(Level*)> close) {
+Level::Level(int levelID, int scoreGoal, int nextLevel, std::function<void(Level*, Renderer*)> init, std::function<int(Level*)> end, std::function<void(Level*)> step, std::function<int(Level*)> close) {
 	_init = init;
 	_end = end;
 	_close = close;
@@ -18,6 +18,7 @@ Level::Level(int scoreGoal, int nextLevel, std::function<void(Level*, Renderer*)
 	pause = false;
 	score = 0;
 	this->scoreGoal = scoreGoal;
+	this->levelID = levelID;
 	timeSpeed = 1;
 	completionTime = 0;
 
@@ -31,6 +32,12 @@ Level::Level(int scoreGoal, int nextLevel, std::function<void(Level*, Renderer*)
 	starCoins = {};
 
 	loadedLevels++;
+}
+void Level::end() {
+	completionTime = _end(this); ended = true;
+	endTimer.start();
+	std::cout << (double)completionTime / 1000. << " : " << score << std::endl;
+	writeHighscore(levelID, score, scoreGoal, completionTime);
 }
 
 

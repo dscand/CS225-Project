@@ -22,17 +22,17 @@
 #include "levels/level_3.hpp"
 
 Level* get_level_menu() {
-	return new Level(0, -1, _level_menu::init, _level_menu::end, _level_menu::step, _level_default::close);
+	return new Level(-1, 0, -1, _level_menu::init, _level_menu::end, _level_menu::step, _level_default::close);
 }
 
 Level* get_level_1() {
-	return new Level(4, 2, _level_1::init, _level_default::end, _level_default::step, _level_default::close);
+	return new Level(1, 4, 2, _level_1::init, _level_default::end, _level_default::step, _level_default::close);
 }
 Level* get_level_2() {
-	return new Level(1, 3, _level_2::init, _level_default::end, _level_default::step, _level_default::close);
+	return new Level(2, 1, 3, _level_2::init, _level_default::end, _level_default::step, _level_default::close);
 }
 Level* get_level_3() {
-	return new Level(4, 4, _level_3::init, _level_default::end, _level_default::step, _level_default::close);
+	return new Level(3, 4, 4, _level_3::init, _level_default::end, _level_default::step, _level_default::close);
 }
 
 
