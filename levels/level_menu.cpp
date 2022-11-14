@@ -12,6 +12,12 @@ void _level_menu::init(Level* level, Renderer* renderer) {
 		long double imageScale = (1./1024.)*(long double)level->renderer->getWindowWidth();
 		level->background = new Background(level->renderer, backgroundTexturePath, imageScale);
 	}
+		Mix_PlayMusic(gMusic[0], 0);
+		if( Mix_PlayingMusic() == 0 )
+                           {
+                                //Play the music
+                                Mix_PlayMusic(gMusic[1], -1 );
+                           }
 
 	// Play, Exit
 	{
