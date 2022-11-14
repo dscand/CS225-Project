@@ -141,7 +141,7 @@ void _level_default::init(Level* level, Renderer* renderer) {
 								switch (buttonIndex) {
 									case 0:
 										// Play Button Sound effect
-										Mix_PlayChannel(-1, level->renderer->gSound[1], 0);
+										Mix_PlayChannel(-1, level->renderer->gSound[0], 0);
 										// Restart
 										level->nextLevel = -2;
 										level->stop = true;
@@ -149,7 +149,7 @@ void _level_default::init(Level* level, Renderer* renderer) {
 
 									case 2:
 										// Play Button Sound effect
-										Mix_PlayChannel(-1, level->renderer->gSound[1], 0);
+										Mix_PlayChannel(-1, level->renderer->gSound[0], 0);
 										// Exit
 										level->nextLevel = 0;
 										level->stop = true;

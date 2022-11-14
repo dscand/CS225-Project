@@ -179,13 +179,13 @@ Player::Player(Renderer* renderer, std::string shipTexturePath, std::string ship
 void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOffset) {
 	if (alive) object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
 	else if (explosionIndex == 0) {
-		Mix_PlayChannel(-1, object->renderer->gSound[2], 0);
 		spriteBroken->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
 	}
 
 	if (boosting && alive) {
 		spriteFlame.at(flameSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
 		flameSel = rand() % spriteFlame.size();
+		Mix_PlayChannel(-1, object->renderer->gSound[2], 0);
 	}
 	else if (!alive) {
 		if (explosionIndex == 1) {
@@ -216,13 +216,22 @@ void Player::playerStep(long double deltaT = 1.0) {
 }
 void Player::wallCollision(int gameWidth, int gameHeight) {
 	const int deathVelocity = 100;
-	if (object->boxCollision(0,0, gameWidth,gameHeight) && abs(object->getVel()) > deathVelocity) alive = false;
+	if (object->boxCollision(0,0, gameWidth,gameHeight) && abs(object->getVel()) > deathVelocity) {
+		if (alive) Mix_PlayChannel(-1, object->renderer->gSound[1], 0);
+		alive = false;
+	}
 }
 void Player::objectCollision(GravityWell_stationary* collisionObject) {
 	const int deathVelocity = 100;
-	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) alive = false;
+	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) {
+		if (alive) Mix_PlayChannel(-1, object->renderer->gSound[1], 0);
+		alive = false;
+	}
 }
 void Player::objectCollision(GravityWell_moving* collisionObject) {
 	const int deathVelocity = 100;
-	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) alive = false;
+	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) {
+		if (alive) Mix_PlayChannel(-1, object->renderer->gSound[1], 0);
+		alive = false;
+	}
 }

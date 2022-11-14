@@ -35,6 +35,8 @@ void Renderer::init() {
 	}
 	win = SDL_CreateWindow("Terminal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_BORDERLESS);
 	
+	music_init(this);
+
 	const std::string iconPath = "Textures/Icon.png";
 	SDL_Surface* icon = IMG_Load(iconPath.c_str()); // 16x16
 	if (icon == NULL) throw std::string("IMG_Load Failed, ") + SDL_GetError();
