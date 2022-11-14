@@ -140,12 +140,16 @@ void _level_default::init(Level* level, Renderer* renderer) {
 							if (MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight())) {
 								switch (buttonIndex) {
 									case 0:
+										// Play Button Sound effect
+										Mix_PlayChannel( -1, gSound[1], 0 );
 										// Restart
 										level->nextLevel = -2;
 										level->stop = true;
 										break;
 
 									case 2:
+										// Play Button Sound effect
+										Mix_PlayChannel( -1, gSound[1], 0 );
 										// Exit
 										level->nextLevel = 0;
 										level->stop = true;
