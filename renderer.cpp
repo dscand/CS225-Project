@@ -12,7 +12,8 @@ void music_init(Renderer* renderer){
 		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
 	}
 	
-	renderer->gMusic = Mix_LoadMUS( "Sounds/terminal_theme.wav" );
+	renderer->gMusic.push_back(Mix_LoadMUS( "Sounds/terminal_theme.wav"));
+	renderer->gMusic.push_back(Mix_LoadMUS( "Sounds/terminal_in_game_theme.wav"));
 	
 	//renderer->gSound.push_back(Mix_LoadWAV("fileLocation/fileName.wav"));
 	
