@@ -31,7 +31,7 @@ class Renderer {
 		void renderRTexture(SDL_Texture* texture, SDL_Rect* srcrect, SDL_Rect* dstrect, long double angle, SDL_Point* center = NULL, SDL_RendererFlip flip = SDL_FLIP_NONE) { SDL_RenderCopyEx(rend, texture, srcrect, dstrect, angle, center, flip); }
 		int centerXCal(int, int, int);
 		int centerYCal(int, int, int);
-		Mix_Music* gMusic;
+		std::vector<Mix_Music*> gMusic;
 		std::vector<Mix_Chunk*> gSound;
 };
 
