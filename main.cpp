@@ -52,8 +52,8 @@ int WinMain(int argc, char* argv[]) {
 	LevelController* levelController = new LevelController(levels[0]);
 	levelController->levelOpen(&renderer);
 
-	while(gameRunning) {
-		while(!levelController->level->stop) { levelController->level->step(); }
+	while (gameRunning) {
+		while (!levelController->level->stop) { levelController->level->step(); }
 		int nextLevel = levelController->levelClose();
 
 		std::cout << "NextLevel: " << nextLevel << std::endl;
@@ -71,14 +71,11 @@ int WinMain(int argc, char* argv[]) {
 		}
 	}
 
-
 	std::cout << "Exitting" << std::endl;
-
 
 	levelController->levelClose();
 	delete levelController;
 	levelController = nullptr;
-
 
 	renderer.close();
 	return 0;
