@@ -177,10 +177,9 @@ Player::Player(Renderer* renderer, std::string shipTexturePath, std::string ship
 	this->yRotOffset = yRotOffset;
 }
 void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOffset) {
-	if (alive)
-		object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
-	else if (explosionIndex == 0){
-		Mix_PlayChannel( -1, gSound[2], 0 );
+	if (alive) object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+	else if (explosionIndex == 0) {
+		Mix_PlayChannel(-1, object->renderer->gSound[2], 0);
 		spriteBroken->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
 	}
 

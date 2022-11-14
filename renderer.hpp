@@ -37,6 +37,8 @@ class Renderer {
 
 class RTexture {
 	public:
+		Renderer* renderer;
+		
 		RTexture(Renderer*);
 		virtual ~RTexture() { free(); };
 
@@ -55,7 +57,6 @@ class RTexture {
 		int getHeight() { return height; }
 
 	private:
-		Renderer* renderer;
 		SDL_Texture* texture;
 
 		//Image dimensions
