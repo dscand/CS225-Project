@@ -30,6 +30,34 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "type": "cppbuild",
+            "label": "SDL2 Full",
+            "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
+            "args": [
+                "${workspaceFolder}\\*.cpp",
+                "${workspaceFolder}\\levels\\*.cpp",
+                "-o",
+                "${workspaceFolder}\\game.exe",
+                "-I${workspaceFolder}/include",
+                "-L${workspaceFolder}/lib",
+                "-lmingw32",
+                "-lSDL2main",
+                "-lSDL2",
+                "-lSDL2_image",
+                "-lSDL2_mixer"
+            ],
+            "options": {
+                "cwd": "C:\\msys64\\mingw64\\bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ],
     "version": "2.0.0"
