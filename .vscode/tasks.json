@@ -38,6 +38,7 @@
             "args": [
                 "${workspaceFolder}\\*.cpp",
                 "${workspaceFolder}\\levels\\*.cpp",
+                "-static",
                 "-o",
                 "${workspaceFolder}\\game.exe",
                 "-I${workspaceFolder}/include",
