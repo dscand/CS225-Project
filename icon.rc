@@ -1,0 +1,2 @@
+#define AppIcon 28
+AppIcon ICON "Textures/Icon.ico"

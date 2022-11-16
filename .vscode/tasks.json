@@ -2,16 +2,17 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "SDL2",
+            "label": "SDL2 Test",
             "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "args": [
                 "${workspaceFolder}\\*.cpp",
                 "${workspaceFolder}\\levels\\*.cpp",
+                "${workspaceFolder}\\icon.res",
                 "-g",
                 "-fdiagnostics-color=always",
                 "-Wall",
                 "-o",
-                "${workspaceFolder}\\TERMINAL.exe",
+                "${workspaceFolder}\\game.exe",
                 "-I${workspaceFolder}/include",
                 "-L${workspaceFolder}/lib",
                 "-lmingw32",
@@ -33,12 +34,14 @@
         },
         {
             "type": "cppbuild",
-            "label": "SDL2 Full",
+            "label": "SDL2 Release",
             "command": "C:\\msys64\\mingw64\\bin\\g++.exe",
             "args": [
                 "${workspaceFolder}\\*.cpp",
                 "${workspaceFolder}\\levels\\*.cpp",
+                "${workspaceFolder}\\icon.res",
                 "-static",
+                "-mwindows",
                 "-o",
                 "${workspaceFolder}\\TERMINAL.exe",
                 "-I${workspaceFolder}/include",
