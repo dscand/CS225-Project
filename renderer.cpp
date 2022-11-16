@@ -7,11 +7,40 @@ Renderer::Renderer(int windowWidth, int windowHeight) {
 	win = nullptr;
 	rend = nullptr;
 }
+void music_init(Renderer* renderer){
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		printf( "SDL_mixer could not initialize! SDL_mixer Error: %s\n", Mix_GetError() );
+	}
+	
+	// Mix_LoadMUS 1
+	renderer->gMusic.push_back(Mix_LoadMUS("Sounds/terminal_theme_intro.wav"));
+	// Mix_LoadMUS 2
+	renderer->gMusic.push_back(Mix_LoadMUS("Sounds/terminal_theme.wav"));
+	// Mix_LoadMUS 3
+	renderer->gMusic.push_back(Mix_LoadMUS("Sounds/terminal_in_game_theme.wav"));
+	
+	//Mix_LoadWAV 1
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/coin_effect.wav"));
+	//Mix_LoadWAV 2
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/crash_effect.wav"));
+	//Mix_LoadWAV 3
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/gravity_effect.wav"));
+	//Mix_LoadWAV 4
+	renderer->gSound.push_back(Mix_LoadWAV("Sounds/rocket_effect(2).wav"));
+	
+}
 void Renderer::init() {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
 		std::printf("error initializing SDL: %s\n", SDL_GetError());
 	}
-	win = SDL_CreateWindow("GAME", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_BORDERLESS);
+	win = SDL_CreateWindow("Terminal", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_INPUT_FOCUS | SDL_WINDOW_BORDERLESS);
+	
+	music_init(this);
+
+	const std::string iconPath = "Textures/Icon.png";
+	SDL_Surface* icon = IMG_Load(iconPath.c_str()); // 16x16
+	if (icon == NULL) throw std::string("IMG_Load Failed, ") + SDL_GetError();
+	SDL_SetWindowIcon(win, icon);
 
 	rend = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED);
 }
@@ -67,6 +96,7 @@ RTexture::RTexture(Renderer* renderer) {
 }
 bool RTexture::loadTexture(std::string path) {
 	SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+	if (loadedSurface == NULL) throw std::string("IMG_Load Failed, ") + SDL_GetError();
 
 	//SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, 0, 0, 0));
 

@@ -122,8 +122,8 @@ class Player {
 		void objectCollision(GravityWell_stationary*);
 		void objectCollision(GravityWell_moving*);
 		void render(int = 0, int = 0, long double = 0);
-		void boost(long double multiplier = 1) { if (alive) object->addVel(speed * multiplier); boosting = true; }
-		void nonboost() { boosting = false; }
+		void boost(long double multiplier = 1);
+		void nonboost() { boosting = false; Mix_HaltChannel(2); }
 		void rotate(long double multiplier = 1) { if (alive) object->rotate(rotationSpeed * multiplier); }
 		void setPosX(long double posX) { object->setPosX(posX); }
 		void setPosY(long double posY) { object->setPosY(posY); }

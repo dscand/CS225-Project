@@ -7,6 +7,7 @@
 #include "include/SDL.h"
 
 #include "game.hpp"
+#include "highscore.hpp"
 
 
 class Level {
@@ -23,16 +24,18 @@ class Level {
 		int gameHeight;
 		
 	public:
-		Level(int, int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<int(Level*)>);
+		Level(int, int, int, std::function<void(Level*, Renderer*)>, std::function<int(Level*)>, std::function<void(Level*)>, std::function<int(Level*)>);
 		~Level() { close(); loadedLevels--; }
 		void init(Renderer* renderer) { _init(this, renderer); }
 		void step() { _step(this); }
-		void end() { completionTime = _end(this); ended = true; endTimer.start();; std::cout << (double)completionTime / 1000. << " : " << score << std::endl; }
+		void end();
 		int close() { return _close(this); }
 		int getGameWidth() { return gameWidth; }
 		int getGameHeight() { return gameHeight; }
 		void setGameWidth(int width) { gameWidth = width; }
 		void setGameHeight(int height) { gameHeight = height; }
+
+		friend std::ostream& operator<<(std::ostream& os, const Level& level);
 
 		Renderer* renderer;
 
@@ -52,6 +55,7 @@ class Level {
 		bool pause;
 		int score;
 		int scoreGoal;
+		int levelID;
 		LTimer dtTimer;
 		float timeSpeed;
 

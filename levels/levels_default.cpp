@@ -4,11 +4,13 @@ void _level_default::init(Level* level, Renderer* renderer) {
 		//level->renderer = new Renderer(WINDOW_WIDTH, WINDOW_HEIGHT);
 		level->renderer = renderer;
 
+		Mix_HaltMusic();
+
 		// Restart, Exit
 		{
 			// Restart
-			std::string buttonTexturePath = "Textures/Play_Button.png";
-			std::string buttonTexturePath_hover = "Textures/Play_Button_Lighten.png";
+			std::string buttonTexturePath = "Textures/Reset_Button.png";
+			std::string buttonTexturePath_hover = "Textures/Reset_Button_Lighten.png";
 			long double buttonTexScale = 2.;
 			int buttonPosX = 420;
 			int buttonPosY = 210;
@@ -140,12 +142,16 @@ void _level_default::init(Level* level, Renderer* renderer) {
 							if (MouseFunctions::mouseOver(level->textures[buttonIndex]->getPosX(), level->textures[buttonIndex]->getPosY(), level->textures[buttonIndex]->getWidth(), level->textures[buttonIndex]->getHeight())) {
 								switch (buttonIndex) {
 									case 0:
+										// Play Button Sound effect
+										Mix_PlayChannel(0, level->renderer->gSound[0], 0);
 										// Restart
 										level->nextLevel = -2;
 										level->stop = true;
 										break;
 
 									case 2:
+										// Play Button Sound effect
+										Mix_PlayChannel(0, level->renderer->gSound[0], 0);
 										// Exit
 										level->nextLevel = 0;
 										level->stop = true;
@@ -268,6 +274,7 @@ void _level_default::init(Level* level, Renderer* renderer) {
 				if (level->player->isAlive() && dist <= coinRange && coin->active) {
 					coin->active = false;
 					level->score++;
+					Mix_PlayChannel(0, level->renderer->gSound[0], 0);
 
 					if (level->scoreGoal > 0 && level->score >= level->scoreGoal) {
 						level->end();

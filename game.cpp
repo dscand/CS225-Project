@@ -177,10 +177,10 @@ Player::Player(Renderer* renderer, std::string shipTexturePath, std::string ship
 	this->yRotOffset = yRotOffset;
 }
 void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOffset) {
-	if (alive)
-		object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
-	else if (explosionIndex == 0)
+	if (alive) object->render(windowOffsetX, windowOffsetY, rotationOffset + rotationalOffset);
+	else if (explosionIndex == 0) {
 		spriteBroken->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
+	}
 
 	if (boosting && alive) {
 		spriteFlame.at(flameSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
@@ -189,7 +189,7 @@ void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOf
 	else if (!alive) {
 		if (explosionIndex == 1) {
 			spriteExplosion1.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
-			explosionSel = rand() % spriteExplosion2.size();
+			explosionSel = rand() % spriteExplosion1.size();
 		}
 		else if (explosionIndex == 2) {
 			spriteExplosion2.at(explosionSel)->render(windowOffsetX, windowOffsetY, object->getRot() + rotationalOffset);
@@ -201,6 +201,12 @@ void Player::render(int windowOffsetX, int windowOffsetY, long double rotationOf
 		}
 	}
 	
+}
+void Player::boost(long double multiplier) {
+	if (alive) object->addVel(speed * multiplier);
+	boosting = true;
+
+	if (!Mix_Playing(2)) Mix_PlayChannel(2, object->renderer->gSound[2], 0);
 }
 void Player::playerStep(long double deltaT = 1.0) {
 	object->physicsStep(deltaT);
@@ -215,13 +221,22 @@ void Player::playerStep(long double deltaT = 1.0) {
 }
 void Player::wallCollision(int gameWidth, int gameHeight) {
 	const int deathVelocity = 100;
-	if (object->boxCollision(0,0, gameWidth,gameHeight) && abs(object->getVel()) > deathVelocity) alive = false;
+	if (object->boxCollision(0,0, gameWidth,gameHeight) && abs(object->getVel()) > deathVelocity) {
+		if (alive) Mix_PlayChannel(1, object->renderer->gSound[1], 0);
+		alive = false;
+	}
 }
 void Player::objectCollision(GravityWell_stationary* collisionObject) {
 	const int deathVelocity = 100;
-	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) alive = false;
+	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) {
+		if (alive) Mix_PlayChannel(1, object->renderer->gSound[1], 0);
+		alive = false;
+	}
 }
 void Player::objectCollision(GravityWell_moving* collisionObject) {
 	const int deathVelocity = 100;
-	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) alive = false;
+	if (object->circleCollision(collisionObject->getPosX(),collisionObject->getPosY(), collisionObject->collisionRadius) && abs(object->getVel()) > deathVelocity) {
+		if (alive) Mix_PlayChannel(1, object->renderer->gSound[1], 0);
+		alive = false;
+	}
 }

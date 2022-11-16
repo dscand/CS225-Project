@@ -22,17 +22,17 @@
 #include "levels/level_3.hpp"
 
 Level* get_level_menu() {
-	return new Level(0, -1, _level_menu::init, _level_menu::end, _level_menu::step, _level_default::close);
+	return new Level(-1, 0, -1, _level_menu::init, _level_menu::end, _level_menu::step, _level_default::close);
 }
 
 Level* get_level_1() {
-	return new Level(4, 2, _level_1::init, _level_default::end, _level_default::step, _level_default::close);
+	return new Level(1, 4, 2, _level_1::init, _level_default::end, _level_default::step, _level_default::close);
 }
 Level* get_level_2() {
-	return new Level(1, 3, _level_2::init, _level_default::end, _level_default::step, _level_default::close);
+	return new Level(2, 1, 3, _level_2::init, _level_default::end, _level_default::step, _level_default::close);
 }
 Level* get_level_3() {
-	return new Level(4, 4, _level_3::init, _level_default::end, _level_default::step, _level_default::close);
+	return new Level(3, 4, 4, _level_3::init, _level_default::end, _level_default::step, _level_default::close);
 }
 
 
@@ -52,8 +52,8 @@ int WinMain(int argc, char* argv[]) {
 	LevelController* levelController = new LevelController(levels[0]);
 	levelController->levelOpen(&renderer);
 
-	while(gameRunning) {
-		while(!levelController->level->stop) { levelController->level->step(); }
+	while (gameRunning) {
+		while (!levelController->level->stop) { levelController->level->step(); }
 		int nextLevel = levelController->levelClose();
 
 		std::cout << "NextLevel: " << nextLevel << std::endl;
@@ -67,18 +67,38 @@ int WinMain(int argc, char* argv[]) {
 
 			if (nextLevel < levelsLen) levelController = new LevelController(levels[nextLevel]);
 			else levelController = new LevelController(levels[0]);
-			levelController->levelOpen(&renderer);
+			try {
+				levelController->levelOpen(&renderer);
+			}
+			catch (char const* msg) {
+				std::cout << "Level Controller Error, " << msg << std::endl;
+				levelController->level->stop = true;
+				gameRunning = false;
+				break;
+			}
+			catch (std::string msg) {
+				std::cout << "Level Controller Error, " << msg << std::endl;
+				levelController->level->stop = true;
+				gameRunning = false;
+				break;
+			}
+			catch (...) {
+				std::cout << "Level Controller UNKNOWN Error" << std::endl;
+				levelController->level->stop = true;
+				gameRunning = false;
+				break;
+			}
 		}
 	}
 
-
 	std::cout << "Exitting" << std::endl;
 
+	Mix_HaltMusic();
+	Mix_HaltChannel(-1);
 
 	levelController->levelClose();
 	delete levelController;
 	levelController = nullptr;
-
 
 	renderer.close();
 	return 0;
